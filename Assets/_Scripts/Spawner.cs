@@ -11,22 +11,31 @@ public class Spawner : MonoBehaviour
 
     public void SpawnSoldier()
     {
-        // 1. Если это враг — спавним бесплатно (пока что)
         if (isEnemy)
         {
-            Instantiate(unitPrefab, spawnPoint.position, Quaternion.identity);
-            return; // Выходим из функции, дальше код не читаем
+            CreateUnit();
+            return;
         }
 
-        // 2. Если это игрок — проверяем деньги
         if (GameManager.instance.gold >= price)
         {
             GameManager.instance.SpendGold(price);
-            Instantiate(unitPrefab, spawnPoint.position, Quaternion.identity);
+            CreateUnit();
         }
         else
         {
             Debug.Log("Не хватает золота!");
         }
+    }
+
+    void CreateUnit()
+    {
+        // Вычисляем случайную высоту (от -2 до +2 метров по Y)
+        float randomY = Random.Range(-2f, 2f);
+
+        // Создаем новую позицию спавна
+        Vector3 spawnPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + randomY, 0);
+
+        Instantiate(unitPrefab, spawnPos, Quaternion.identity);
     }
 }
