@@ -17,24 +17,29 @@ public class UnitCombat : MonoBehaviour
         GetComponent<Rigidbody2D>().sleepMode = RigidbodySleepMode2D.NeverSleep;
     }
 
-    // Эта функция вызывается сама, ПОКА мы касаемся кого-то
     void OnCollisionStay2D(Collision2D collision)
     {
-        // 1. Проверяем, прошло ли достаточно времени для удара
         if (Time.time - lastAttackTime > attackSpeed)
         {
-            // 2. Проверяем, враг ли это (теги должны быть разными)
+            // Проверка "свой-чужой"
             if (collision.gameObject.tag != gameObject.tag && collision.gameObject.tag != "Untagged")
             {
-                // 3. Пытаемся найти у того, в кого врезались, скрипт UnitCombat
-                UnitCombat enemyStats = collision.gameObject.GetComponent<UnitCombat>();
-
-                if (enemyStats != null) // Если у цели есть жизни
+                // ВАРИАНТ 1: Мы бьем Юнита
+                UnitCombat enemyUnit = collision.gameObject.GetComponent<UnitCombat>();
+                if (enemyUnit != null)
                 {
-                    // БЬЕМ!
-                    enemyStats.TakeDamage(damage);
-                    lastAttackTime = Time.time; // Сбрасываем таймер
-                    Debug.Log(gameObject.name + " ударил " + collision.gameObject.name);
+                    enemyUnit.TakeDamage(damage);
+                    lastAttackTime = Time.time;
+                    return; // Ударили и выходим
+                }
+
+                // ВАРИАНТ 2: Мы бьем Базу (НОВОЕ)
+                BaseController enemyBase = collision.gameObject.GetComponent<BaseController>();
+                if (enemyBase != null)
+                {
+                    enemyBase.TakeDamage(damage);
+                    lastAttackTime = Time.time;
+                    Debug.Log("Бью базу!");
                 }
             }
         }
