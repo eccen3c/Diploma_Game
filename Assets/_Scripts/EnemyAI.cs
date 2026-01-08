@@ -2,28 +2,35 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-    public Spawner enemySpawner; // Ссылка на спавнер врага
-    public float spawnInterval = 3.0f; // Как часто спавнить (раз в 3 сек)
-
+    public Spawner mySpawner;
+    public float spawnInterval = 3f; // Раз в 3 секунды враг думает
     private float timer;
 
     void Update()
     {
-        // Тикаем таймером
         timer += Time.deltaTime;
 
-        // Если прошло 3 секунды
         if (timer >= spawnInterval)
         {
-            AttemptSpawn();
-            timer = 0; // Сбрасываем таймер
+            SpawnRandomUnit();
+            timer = 0;
         }
     }
 
-    void AttemptSpawn()
+    void SpawnRandomUnit()
     {
-        // Тут можно добавить логику: "Если у игрока много войск — спавни больше"
-        // Но пока просто спавним всегда
-        enemySpawner.SpawnSoldier();
+        // Бросаем монетку (0 или 1)
+        int choice = Random.Range(0, 2);
+
+        if (choice == 0)
+        {
+            // 50% шанс - Мечник
+            mySpawner.BuySwordsman();
+        }
+        else
+        {
+            // 50% шанс - Лучник
+            mySpawner.BuyArcher();
+        }
     }
 }

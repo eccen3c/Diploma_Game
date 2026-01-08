@@ -2,25 +2,53 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject unitPrefab;
+    [Header("Настройки")]
     public Transform spawnPoint;
-    public int price = 30;
+    public bool isEnemy = false;
 
-    [Header("Чей это спавнер?")]
-    public bool isEnemy = false; // <-- Новая галочка
+    [Header("Юниты (Префабы)")]
+    public GameObject swordPrefab;  // Сюда перетащишь Unit_Ally
+    public GameObject archerPrefab; // Сюда перетащишь Unit_Archer_Ally
 
+    [Header("Цены")]
+    public int swordPrice = 100;
+    public int archerPrice = 150;
+
+    // --- ФУНКЦИИ ДЛЯ КНОПОК ИГРОКА ---
+
+    public void BuySwordsman()
+    {
+        TrySpawn(swordPrefab, swordPrice);
+    }
+
+    public void BuyArcher()
+    {
+        TrySpawn(archerPrefab, archerPrice);
+    }
+
+    // --- ФУНКЦИЯ ДЛЯ ВРАГА (чтобы EnemyAI не ломался) ---
     public void SpawnSoldier()
     {
+        // Враг пока будет спавнить только мечников
+        TrySpawn(swordPrefab, 0);
+    }
+
+    // --- ВНУТРЕННЯЯ ЛОГИКА ---
+
+    private void TrySpawn(GameObject unitToSpawn, int price)
+    {
+        // Если это ВРАГ, он спавнит бесплатно
         if (isEnemy)
         {
-            CreateUnit();
+            CreateUnit(unitToSpawn);
             return;
         }
 
+        // Если это ИГРОК, проверяем деньги
         if (GameManager.instance.gold >= price)
         {
             GameManager.instance.SpendGold(price);
-            CreateUnit();
+            CreateUnit(unitToSpawn);
         }
         else
         {
@@ -28,14 +56,12 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    void CreateUnit()
+    void CreateUnit(GameObject prefab)
     {
-        // Вычисляем случайную высоту (от -2 до +2 метров по Y)
+        // Случайная высота (чтобы не шли одной линией)
         float randomY = Random.Range(-2f, 2f);
+        Vector3 pos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + randomY, 0);
 
-        // Создаем новую позицию спавна
-        Vector3 spawnPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + randomY, 0);
-
-        Instantiate(unitPrefab, spawnPos, Quaternion.identity);
+        Instantiate(prefab, pos, Quaternion.identity);
     }
 }

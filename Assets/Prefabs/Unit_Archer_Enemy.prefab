@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 6432570839501158755}
   - component: {fileID: 8763188952253274784}
   m_Layer: 0
-  m_Name: Unit_Enemy
+  m_Name: Unit_Archer_Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,7 +162,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.93207544, g: 0.096724704, b: 0.096724704, a: 1}
+  m_Color: {r: 0.93333334, g: 0.54561687, b: 0.09803918, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -246,16 +246,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3820d09e9baaf84bb9418b59ace16d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isRanged: 0
-  projectilePrefab: {fileID: 0}
+  isRanged: 1
+  projectilePrefab: {fileID: 4189439192608397778, guid: 2330768c0ac455240b1839b05ef3228a, type: 3}
   projectileMaxRange: 7
   firePoint: {fileID: 0}
   speed: 2
   detectRange: 6
-  attackRange: 1.5
-  separationRadius: 1
+  attackRange: 6
+  separationRadius: 1.5
   separationForce: 2
-  health: 100
+  health: 60
   damage: 20
   attackCooldown: 1
   enemyTag: 
