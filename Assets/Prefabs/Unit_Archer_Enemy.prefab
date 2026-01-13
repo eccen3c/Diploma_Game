@@ -258,4 +258,4 @@ MonoBehaviour:
   health: 60
   damage: 20
   attackCooldown: 1
-  enemyTag: 
+  enemyTag: Ally

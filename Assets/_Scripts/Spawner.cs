@@ -1,67 +1,93 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 public class Spawner : MonoBehaviour
 {
     [Header("Настройки")]
     public Transform spawnPoint;
-    public bool isEnemy = false;
+    public GameObject unitPrefab; // Ссылка на Скелета (потом заменим на массив префабов)
 
-    [Header("Юниты (Префабы)")]
-    public GameObject swordPrefab;  // Сюда перетащишь Unit_Ally
-    public GameObject archerPrefab; // Сюда перетащишь Unit_Archer_Ally
+    [Header("Баланс")]
+    public float spawnInterval = 0.15f; // Задержка между выходом юнитов
 
-    [Header("Цены")]
-    public int swordPrice = 100;
-    public int archerPrice = 150;
+    // --- НОВЫЕ НАСТРОЙКИ РАЗБРОСА ---
+    [Header("Разброс Спавна")]
+    public float spreadX = 1.5f; // Разброс влево-вправо (чтобы не шли по струнке)
+    public float spreadY = 2.5f; // Разброс вверх-вниз (ширина дороги)
 
-    // --- ФУНКЦИИ ДЛЯ КНОПОК ИГРОКА ---
+    [Header("UI Кнопки")]
+    public GameObject[] slots;
 
-    public void BuySwordsman()
+    private int currentSelectionIndex = 0; // Где сейчас курсор
+
+    void Start()
     {
-        TrySpawn(swordPrefab, swordPrice);
+        SetSelection(0);
     }
 
-    public void BuyArcher()
+    // --- ГЛАВНЫЙ МЕТОД (Вызывает GameManager раз в 15 сек) ---
+    public void StartWave()
     {
-        TrySpawn(archerPrefab, archerPrice);
+        StartCoroutine(SpawnWaveRoutine());
     }
 
-    // --- ФУНКЦИЯ ДЛЯ ВРАГА (чтобы EnemyAI не ломался) ---
-    public void SpawnSoldier()
+    IEnumerator SpawnWaveRoutine()
     {
-        // Враг пока будет спавнить только мечников
-        TrySpawn(swordPrefab, 0);
-    }
+        // Бесконечный цикл внутри одной волны? Нет, мы спавним пока есть деньги.
+        // Как только деньги кончились - выходим из корутины и ждем следующего вызова через 15 сек.
 
-    // --- ВНУТРЕННЯЯ ЛОГИКА ---
-
-    private void TrySpawn(GameObject unitToSpawn, int price)
-    {
-        // Если это ВРАГ, он спавнит бесплатно
-        if (isEnemy)
+        while (true)
         {
-            CreateUnit(unitToSpawn);
-            return;
-        }
+            // 1. Смотрим, какой юнит сейчас выбран (пока везде скелет unitPrefab)
+            // В будущем тут будет: GameObject prefabToSpawn = unitPrefabs[currentSelectionIndex];
+            GameObject prefabToSpawn = unitPrefab;
 
-        // Если это ИГРОК, проверяем деньги
-        if (GameManager.instance.gold >= price)
-        {
-            GameManager.instance.SpendGold(price);
-            CreateUnit(unitToSpawn);
-        }
-        else
-        {
-            Debug.Log("Не хватает золота!");
+            if (prefabToSpawn == null) break;
+
+            UnitStats stats = prefabToSpawn.GetComponent<UnitStats>();
+
+            // 2. Пытаемся купить
+            if (GameManager.instance.SpendGold(stats.cost))
+            {
+                // 3. Деньги были -> Спавним с РАЗБРОСОМ
+                SpawnUnit(prefabToSpawn);
+
+                // 4. Ждем перед следующим
+                yield return new WaitForSeconds(spawnInterval);
+            }
+            else
+            {
+                // 5. Денег НЕТ -> Волна закончена. Ждем следующего таймера.
+                Debug.Log("Золото кончилось, спавн остановлен.");
+                break; // Выход из цикла
+            }
         }
     }
 
-    void CreateUnit(GameObject prefab)
+    void SpawnUnit(GameObject prefab)
     {
-        // Случайная высота (чтобы не шли одной линией)
-        float randomY = Random.Range(-2f, 2f);
-        Vector3 pos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + randomY, 0);
+        // Используем наши переменные для рандома
+        float offsetX = Random.Range(-spreadX, spreadX);
+        float offsetY = Random.Range(-spreadY, spreadY);
 
-        Instantiate(prefab, pos, Quaternion.identity);
+        Vector3 randomPos = new Vector3(
+            spawnPoint.position.x + offsetX,
+            spawnPoint.position.y + offsetY,
+            0
+        );
+
+        Instantiate(prefab, randomPos, Quaternion.identity);
+    }
+
+// --- УПРАВЛЕНИЕ КУРСОРОМ (WASD)
+public void SetSelection(int index)
+    {
+        currentSelectionIndex = index;
+        for (int i = 0; i < slots.Length; i++)
+        {
+            Transform frame = slots[i].transform.Find("SelectionFrame");
+            if (frame != null) frame.gameObject.SetActive(i == index);
+        }
     }
 }
