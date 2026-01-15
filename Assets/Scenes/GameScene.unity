@@ -395,7 +395,7 @@ Transform:
   m_GameObject: {fileID: 95004400}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30, y: 0.862, z: 0}
+  m_LocalPosition: {x: 25, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1.6995, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1035,7 +1035,7 @@ Transform:
   m_GameObject: {fileID: 471035442}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.299998, y: 1.357, z: 0}
+  m_LocalPosition: {x: -25, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1.715, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1095,7 +1095,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 20
+  orthographic size: 15
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1138,6 +1138,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1232,9 +1233,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f739f232ca5b749b9c04596ca82f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  limitX: 25
-  limitY: 15
+  mapLimitX: 30
+  mapLimitY: 15
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 219efc84d8c3d22458eedd5875e973b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoModeDelay: 6
+  smoothSpeed: 2
+  playerUnitTag: Ally
+  camController: {fileID: 519420033}
 --- !u!1 &598940235
 GameObject:
   m_ObjectHideFlags: 0
@@ -2056,7 +2072,7 @@ Transform:
   m_GameObject: {fileID: 943125697}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30, y: 0, z: 0}
+  m_LocalPosition: {x: 22, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3528,6 +3544,7 @@ GameObject:
   - component: {fileID: 1665530444}
   - component: {fileID: 1665530446}
   - component: {fileID: 1665530445}
+  - component: {fileID: 1665530447}
   m_Layer: 5
   m_Name: MinimapDisplay
   m_TagString: Untagged
@@ -3589,6 +3606,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665530443}
   m_CullTransparentMesh: 1
+--- !u!114 &1665530447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665530443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89bf4d9d148fbb14b8b40eeb18410575, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 519420033}
+  minimapRect: {fileID: 1665530444}
+  autoPilot: {fileID: 519420034}
 --- !u!1 &1760679536
 GameObject:
   m_ObjectHideFlags: 0
@@ -3618,6 +3650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c620cff0d90fc3946bbe98ad2f659dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGameOver: 0
   gold: 100
   passiveIncome: 10
   incomeRate: 1
@@ -4228,7 +4261,7 @@ Transform:
   m_GameObject: {fileID: 1886501381}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.3, y: 0.5, z: 0}
+  m_LocalPosition: {x: -22, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -2,31 +2,50 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public float speed = 20f;
-    public float limitX = 25f; // Граница влево-вправо
-    public float limitY = 10f; // Граница вверх-вниз (НОВОЕ)
+    [Header("Границы Карты (Например: 64 и 18)")]
+    public float mapLimitX = 64f; // Расстояние от центра до края травы по X
+    public float mapLimitY = 18f; // Расстояние от центра до края травы по Y
 
-    void Update()
+    private Camera cam;
+    private float camHalfHeight;
+    private float camHalfWidth;
+
+    void Start()
     {
-        float moveX = 0;
-        float moveY = 0;
+        cam = GetComponent<Camera>();
+        // Считаем половинки размера камеры, чтобы знать, где её остановить
+        camHalfHeight = cam.orthographicSize;
+        camHalfWidth = cam.orthographicSize * cam.aspect;
+    }
 
-        // Влево-Вправо
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) moveX = -1;
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) moveX = 1;
+    public void SetPosition(Vector3 targetPosition)
+    {
+        if (cam == null) return;
 
-        // Вверх-Вниз (НОВОЕ)
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) moveY = 1;
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) moveY = -1;
+        // Если экран игры меняется, пересчитываем ширину
+        camHalfHeight = cam.orthographicSize;
+        camHalfWidth = cam.orthographicSize * cam.aspect;
 
-        // Двигаем
-        Vector3 moveDir = new Vector3(moveX, moveY, 0);
-        transform.Translate(moveDir * speed * Time.deltaTime);
+        Vector3 pos = targetPosition;
+        pos.z = -10; // Всегда держим камеру над полем
 
-        // Ограничиваем (Clamp) и X, и Y
-        Vector3 pos = transform.position;
-        pos.x = Mathf.Clamp(pos.x, -limitX, limitX);
-        pos.y = Mathf.Clamp(pos.y, -limitY, limitY); // Ограничение высоты
+        // --- ГЛАВНАЯ МАТЕМАТИКА ---
+        // Мы берем край карты (mapLimit) и вычитаем половину ширины камеры.
+        // Это точка, дальше которой ЦЕНТР камеры не имеет права ехать.
+
+        float maxX = mapLimitX - camHalfWidth;
+        float minX = -mapLimitX + camHalfWidth;
+
+        float maxY = mapLimitY - camHalfHeight;
+        float minY = -mapLimitY + camHalfHeight;
+
+        // Если карта меньше, чем экран камеры -> ставим в 0
+        if (maxX < minX) pos.x = 0;
+        else pos.x = Mathf.Clamp(pos.x, minX, maxX);
+
+        if (maxY < minY) pos.y = 0;
+        else pos.y = Mathf.Clamp(pos.y, minY, maxY);
+
         transform.position = pos;
     }
 }

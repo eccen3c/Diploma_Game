@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public bool isGameOver = false;
+
     [Header("Ёкономика")]
     public int gold = 100;
     public int passiveIncome = 5;
@@ -89,11 +91,13 @@ public class GameManager : MonoBehaviour
 
         if (playerWon)
         {
+            GameManager.instance.isGameOver = true;
             resultText.text = "YOU WIN!";
             resultText.color = Color.green;
         }
         else
         {
+            GameManager.instance.isGameOver = true;
             resultText.text = "DEFEAT";
             resultText.color = Color.red;
         }
