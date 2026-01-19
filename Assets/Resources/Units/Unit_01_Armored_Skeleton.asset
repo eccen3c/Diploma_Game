@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_01_Armored_Skeleton
+  m_EditorClassIdentifier: 
+  unitName: Armored Skeleton
+  icon: {fileID: 6443136704387650331, guid: 1e5a4f181e3d7d1499542182c1b7db8c, type: 3}
+  unitPrefab: {fileID: 4333461495702870776, guid: 875920d003a26754d952f0f85a91dea6, type: 3}
+  description: 
+  cost: 15
+  incomeBonus: 3
+  supplyCost: 1
+  hp: 90
+  damage: 8
+  attackSpeed: 1.5
+  moveSpeed: 1.7
+  attackRange: 1

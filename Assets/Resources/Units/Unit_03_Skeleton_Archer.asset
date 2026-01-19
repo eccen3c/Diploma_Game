@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_03_Skeleton_Archer
+  m_EditorClassIdentifier: 
+  unitName: Skeleton Archer
+  icon: {fileID: 8653915642874675650, guid: be580b4be03887340b410fdacac81ef3, type: 3}
+  unitPrefab: {fileID: 4333461495702870776, guid: 25fe76cb4bc8ba24e88d67dd28c68d64, type: 3}
+  description: 
+  cost: 25
+  incomeBonus: 5
+  supplyCost: 1
+  hp: 40
+  damage: 12
+  attackSpeed: 1.4
+  moveSpeed: 2.5
+  attackRange: 6
