@@ -4,20 +4,24 @@ using UnityEngine;
 public class UnitData : ScriptableObject
 {
     [Header("Визуал")]
-    public string unitName;        // Имя (например, "Soldier")
-    public Sprite icon;            // Иконка для магазина
-    public GameObject unitPrefab;  // Префаб, который появляется на поле
-    [TextArea] public string description; // Описание для тултипа
+    public string unitName;
+    public Sprite icon;
+    [TextArea] public string description;
+
+    [Header("Префабы (Разные для сторон)")]
+    public GameObject prefab_Player; // Сюда кидаешь Синего
+    public GameObject prefab_Enemy;  // Сюда кидаешь Красного
 
     [Header("Экономика")]
-    public int cost;               // Цена покупки (Gold)
-    public int incomeBonus;        // Сколько добавляет к доходу (+Gold)
-    public int supplyCost;         // Сколько занимает места (Supply)
+    public int cost;
+    public int incomeBonus;
+    public int supplyCost;
 
-    [Header("Характеристики")]
-    public float hp;               // Здоровье
-    public float damage;           // Урон
-    public float attackSpeed;      // Скорость атаки (пауза между ударами)
-    public float moveSpeed;        // Скорость бега
-    public float attackRange;      // Дальность (1 = ближний, 5+ = лучник)
+    [Header("Боевые Характеристики")]
+    public float hp;
+    public float damage;
+    public float moveSpeed;
+    public float attackRange;
+    public float visionRange;
+    public float attackSpeed;
 }

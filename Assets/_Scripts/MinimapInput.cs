@@ -6,39 +6,28 @@ public class MinimapInput : MonoBehaviour, IPointerDownHandler, IDragHandler
     public CameraController mainCamera;
     public RectTransform minimapRect;
 
-    // --- НОВАЯ ССЫЛКА ---
-    public CameraAutoPilot autoPilot;
-
     void Start()
     {
+        // Если забыл привязать, скрипт попытается найти компонент на этом же объекте
         if (minimapRect == null) minimapRect = GetComponent<RectTransform>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (Time.timeScale == 0 || GameManager.instance.isGameOver) return;
-        ResetCameraTimer(); // Сбрасываем таймер при клике
-        MoveCamera(eventData);
+        UpdateCameraPosition(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (Time.timeScale == 0 || GameManager.instance.isGameOver) return;
-        ResetCameraTimer(); // Сбрасываем таймер при перетягивании
-        MoveCamera(eventData);
+        UpdateCameraPosition(eventData);
     }
 
-    // Вспомогательный метод
-    void ResetCameraTimer()
-    {
-        if (autoPilot != null) autoPilot.ResetTimer();
-    }
-
-    void MoveCamera(PointerEventData eventData)
+    void UpdateCameraPosition(PointerEventData eventData)
     {
         if (mainCamera == null) return;
 
         Vector2 localPoint;
+        // Переводим точку клика на экране в локальные координаты прямоугольника миникарты
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             minimapRect,
             eventData.position,
@@ -46,11 +35,20 @@ public class MinimapInput : MonoBehaviour, IPointerDownHandler, IDragHandler
             out localPoint
         );
 
-        float normalizedX = (localPoint.x / minimapRect.rect.width) + 0.5f;
-        float normalizedY = (localPoint.y / minimapRect.rect.height) + 0.5f;
+        // Вычисляем процент по ширине (от 0 до 1)
+        // localPoint.x идет от -Width/2 до +Width/2. 
+        // Делим на ширину и прибавляем 0.5, чтобы получить диапазон 0..1
+        float pctX = (localPoint.x / minimapRect.rect.width) + 0.5f;
+        float pctY = (localPoint.y / minimapRect.rect.height) + 0.5f;
 
-        float worldX = Mathf.Lerp(-mainCamera.mapLimitX, mainCamera.mapLimitX, normalizedX);
-        float worldY = Mathf.Lerp(-mainCamera.mapLimitY, mainCamera.mapLimitY, normalizedY);
+        // Защита: не даем значению выйти за пределы 0..1
+        pctX = Mathf.Clamp01(pctX);
+        pctY = Mathf.Clamp01(pctY);
+
+        // Переводим проценты в мировые координаты камеры
+        // Lerp интерполирует между левой (-75) и правой (+75) границей
+        float worldX = Mathf.Lerp(-mainCamera.mapLimitX, mainCamera.mapLimitX, pctX);
+        float worldY = Mathf.Lerp(-mainCamera.mapLimitY, mainCamera.mapLimitY, pctY);
 
         mainCamera.SetPosition(new Vector3(worldX, worldY, -10));
     }

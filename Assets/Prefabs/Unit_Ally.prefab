@@ -96,7 +96,6 @@ GameObject:
   - component: {fileID: 1348923186616052424}
   - component: {fileID: 7389133204722229147}
   - component: {fileID: 1402309674069185621}
-  - component: {fileID: 7758543659239607570}
   m_Layer: 0
   m_Name: Unit_Ally
   m_TagString: Ally
@@ -234,24 +233,3 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &7758543659239607570
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4333461495702870776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3820d09e9baaf84bb9418b59ace16d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 2
-  detectRange: 6
-  attackRange: 1.5
-  separationRadius: 1
-  separationForce: 2
-  health: 100
-  damage: 20
-  attackCooldown: 1
-  enemyTag: 
