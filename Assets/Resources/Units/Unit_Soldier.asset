@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Soldier
+  m_EditorClassIdentifier: 
+  unitName: Soldier
+  icon: {fileID: -6197721492319052749, guid: 5139ba75c11333a4ba34634ffc0dea9e, type: 3}
+  description: 
+  prefab_Player: {fileID: 3529091357833573610, guid: 28b469d2c96d2a0459c3660824361014, type: 3}
+  prefab_Enemy: {fileID: 7761284283925491117, guid: ba8fe59d318ea2e4db78d38a47c3ead0, type: 3}
+  cost: 20
+  incomeBonus: 4
+  supplyCost: 1
+  hp: 100
+  damage: 15
+  moveSpeed: 2
+  attackRange: 1.3
+  visionRange: 5
+  attackSpeed: 1

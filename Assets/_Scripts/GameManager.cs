@@ -24,9 +24,6 @@ public class GameManager : MonoBehaviour
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(false);
 
-        // ВАЖНО: Мы удалили отсюда start passive income, 
-        // так как теперь деньгами управляет GameLoopManager.
-
         Time.timeScale = 1;
     }
 
@@ -60,25 +57,35 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void EndGame(bool playerWon)
+    // --- ЛОГИКА КОНЦА ИГРЫ (ОБНОВЛЕНА) ---
+
+    // Теперь метод называется GameOver и принимает тег проигравшего
+    public void GameOver(string loserTag)
     {
         if (isGameOver) return; // Чтобы не вызывалось дважды
 
         isGameOver = true;
-        if (gameOverPanel) gameOverPanel.SetActive(true);
-        Time.timeScale = 0; // Останавливаем игру
 
+        // Включаем панель
+        if (gameOverPanel) gameOverPanel.SetActive(true);
+
+        // Останавливаем время
+        Time.timeScale = 0;
+
+        // Пишем результат
         if (resultText != null)
         {
-            if (playerWon)
-            {
-                resultText.text = "YOU WIN!";
-                resultText.color = Color.green;
-            }
-            else
+            // Если проиграл Игрок ("Player") -> Значит поражение
+            if (loserTag == "Player")
             {
                 resultText.text = "DEFEAT";
                 resultText.color = Color.red;
+            }
+            // Если проиграл Враг ("Enemy") -> Значит победа
+            else
+            {
+                resultText.text = "VICTORY!";
+                resultText.color = Color.green;
             }
         }
     }

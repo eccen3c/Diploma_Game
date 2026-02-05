@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
-  m_Name: Unit_Skeleton
+  m_Name: Unit_Armored_Skeleton
   m_EditorClassIdentifier: 
-  unitName: Skeleton
-  icon: {fileID: 0}
+  unitName: Armored Skeleton
+  icon: {fileID: -797746504705623250, guid: e092ef4f36ea5a74da49a48006f9fc47, type: 3}
   description: 
   prefab_Player: {fileID: 483424562989479873, guid: 863824f3c4a702d4aadf64b81330d664, type: 3}
   prefab_Enemy: {fileID: 3049700185533956117, guid: abcba2d2ea5aa614ca6912bfb79b7ba0, type: 3}
   cost: 15
   incomeBonus: 3
   supplyCost: 1
-  hp: 100
-  damage: 10
-  moveSpeed: 2
+  hp: 90
+  damage: 8
+  moveSpeed: 1.7
   attackRange: 2
   visionRange: 5
-  attackSpeed: 1
+  attackSpeed: 1.5
