@@ -1,21 +1,29 @@
 using UnityEngine;
+using System.Collections;
 
 public class ProjectileController : MonoBehaviour
 {
-    public float speed = 12f; // Чуть быстрее для стрел
+    public float speed = 10f;
     public int damage = 25;
 
+    [Header("Settings")]
+    public bool hasExplosion = false; // <-- НОВАЯ ГАЛОЧКА!
+    public float explosionDuration = 0.4f; // Время взрыва (если он есть)
+
     private Transform target;
-    private string ownerTag; // Тег того, кто выстрелил (чтобы не попадать в своих)
-    private Vector3 lastDirection; // Чтобы лететь прямо, если цель умерла
+    private string ownerTag;
+    private Vector3 lastDirection;
+
+    private bool hasHit = false;
+    private Animator anim;
 
     void Start()
     {
-        Destroy(gameObject, 3f); // Убить стрелу через 3 сек, если улетела в молоко
-        lastDirection = transform.right; // По умолчанию летим вправо
+        anim = GetComponent<Animator>();
+        Destroy(gameObject, 5f);
+        lastDirection = transform.right;
     }
 
-    // Обновили метод настройки: теперь принимаем и тег стрелка
     public void SetTarget(Transform newTarget, string tag)
     {
         target = newTarget;
@@ -24,50 +32,55 @@ public class ProjectileController : MonoBehaviour
 
     void Update()
     {
+        if (hasHit) return;
+
         if (target != null)
         {
-            // --- НОВАЯ ЛОГИКА ДВИЖЕНИЯ (Магнит) ---
-            // Стрела летит строго в точку цели. Промах исключен.
             transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
 
-            // Поворачиваем картинку стрелы к цели (чисто визуал)
             Vector3 dir = target.position - transform.position;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, angle);
 
-            // Запоминаем направление на случай смерти цели
             lastDirection = dir.normalized;
         }
         else
         {
-            // Если цель умерла на лету - летим дальше по прямой
             transform.position += lastDirection * speed * Time.deltaTime;
         }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.isTrigger) return;
+        if (hasHit) return;
 
-        // --- ГЛАВНОЕ: ИГНОРИРУЕМ СВОИХ ---
-        // Если мы попали в объект с таким же тегом, как у стрелка - ничего не делаем
+        // Убрали проверку на триггер, чтобы попадать в тело!
         if (collision.CompareTag(ownerTag)) return;
 
-        // Попадание во врага
         UnitController unit = collision.GetComponent<UnitController>();
         BaseController baseCtrl = collision.GetComponent<BaseController>();
 
-        // Если попали в Юнита
-        if (unit != null)
+        if (unit != null || baseCtrl != null)
         {
-            unit.TakeDamage(damage);
-            Destroy(gameObject); // Уничтожаем стрелу
+            if (unit) unit.TakeDamage(damage);
+            if (baseCtrl) baseCtrl.TakeDamage(damage);
+
+            StartCoroutine(DestroyRoutine());
         }
-        // Если попали в Базу
-        else if (baseCtrl != null)
+    }
+
+    IEnumerator DestroyRoutine()
+    {
+        hasHit = true;
+
+        // Взрываемся ТОЛЬКО если стоит галочка И есть аниматор
+        if (hasExplosion && anim != null)
         {
-            baseCtrl.TakeDamage(damage);
-            Destroy(gameObject);
+            anim.SetTrigger("explode"); // Запускаем анимацию
+            yield return new WaitForSeconds(explosionDuration); // Ждем пока бахнет
         }
+
+        // Если галочки нет — удаляем СРАЗУ (без задержки)
+        Destroy(gameObject);
     }
 }

@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Unit_Archer
   m_EditorClassIdentifier: 
   unitName: Archer
-  icon: {fileID: 8116925086568609498, guid: 5207c7a5e0fd7894bb2d50bad3397306, type: 3}
+  icon: {fileID: 3645612869091388295, guid: 2260714efa557634292d4d9badea62ab, type: 3}
   description: 
   prefab_Player: {fileID: 6839755735771934067, guid: eb48a04c99f9b5e46973041f53ecb42c, type: 3}
   prefab_Enemy: {fileID: 1817101277007986732, guid: 807cc1cea43a0374d8012a5c415fdbbe, type: 3}
-  cost: 50
-  incomeBonus: 8
+  cost: 120
+  incomeBonus: 12
   supplyCost: 2
-  hp: 80
-  damage: 25
+  hp: 180
+  damage: 34
   moveSpeed: 2.2
   attackRange: 8
   visionRange: 12
-  attackSpeed: 1.7
+  attackSpeed: 1.6

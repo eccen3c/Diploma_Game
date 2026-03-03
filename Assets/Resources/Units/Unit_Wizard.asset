@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Wizard
+  m_EditorClassIdentifier: 
+  unitName: Wizard
+  icon: {fileID: 6536702919712791088, guid: ff441ec104d51a44d84ea2bc66a9873a, type: 3}
+  description: 
+  prefab_Player: {fileID: 363165626712950911, guid: 862e3a1b1248cbf4c9a2debaed4c6efb, type: 3}
+  prefab_Enemy: {fileID: 166952372482467090, guid: 10d51245a1d4a8c4c85339fa0b449cb9, type: 3}
+  cost: 210
+  incomeBonus: 22
+  supplyCost: 3
+  hp: 220
+  damage: 70
+  moveSpeed: 1.9
+  attackRange: 8
+  visionRange: 12
+  attackSpeed: 2.4

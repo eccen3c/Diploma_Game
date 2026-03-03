@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 4612505493054662224}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.015, y: 0.078, z: 0}
+  m_LocalPosition: {x: -0.0033, y: 0.0692, z: 0}
   m_LocalScale: {x: 0.13, y: 0.13, z: 0.051999997}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -84,6 +84,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &6370645593134442812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4464688230378391215}
+  m_Layer: 7
+  m_Name: AimPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4464688230378391215
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6370645593134442812}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.0034, y: 0.0664, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4056805549726670363}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6839755735771934067
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +129,7 @@ GameObject:
   - component: {fileID: 5325994364159420262}
   - component: {fileID: 5781166718007182410}
   - component: {fileID: 149097806581902297}
+  - component: {fileID: 682842371329852859}
   m_Layer: 7
   m_Name: Archer-BLUE
   m_TagString: Player
@@ -118,6 +150,7 @@ Transform:
   m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 4464688230378391215}
   - {fileID: 4687350941854990147}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -230,7 +263,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 6839755735771934067}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 95e4ff931a2459347ad17f90f9959932, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -253,8 +286,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0012970534, y: 0.012511838}
-  m_Size: {x: 0.07974014, y: 0.023816578}
+  m_Offset: {x: -0.0045718094, y: 0.01251184}
+  m_Size: {x: 0.07788704, y: 0.023816584}
   m_Direction: 1
 --- !u!114 &149097806581902297
 MonoBehaviour:
@@ -275,5 +308,51 @@ MonoBehaviour:
   visionRange: 0
   attackSpeed: 0
   projectilePrefab: {fileID: 6792228273050918029, guid: cf280788333557945b652b0aacf56919, type: 3}
-  avoidanceRadius: 0.8
+  aimPoint: {fileID: 4464688230378391215}
+  avoidanceRadius: 0.55
   avoidanceForce: 2
+--- !u!61 &682842371329852859
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6839755735771934067}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0089577325, y: 0.09905283}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.1483696}
+    oldSize: {x: 0.22, y: 0.2}
+    newSize: {x: 0.21, y: 0.25}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.09088405, y: 0.1425465}
+  m_EdgeRadius: 0

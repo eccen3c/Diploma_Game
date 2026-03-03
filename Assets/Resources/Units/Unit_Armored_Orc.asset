@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Armored_Orc
+  m_EditorClassIdentifier: 
+  unitName: Armored Orc
+  icon: {fileID: 2103113993325337340, guid: 36e0b93d81badca42a6c39775d18f369, type: 3}
+  description: 
+  prefab_Player: {fileID: 2031763207330112169, guid: fdac8d2f013734c45a67bc5a2924e73d, type: 3}
+  prefab_Enemy: {fileID: 5713183643609883172, guid: cb9dc0819ce67be43aef2daca8c4def5, type: 3}
+  cost: 320
+  incomeBonus: 55
+  supplyCost: 4
+  hp: 1100
+  damage: 45
+  moveSpeed: 1.6
+  attackRange: 1.3
+  visionRange: 5
+  attackSpeed: 1.7

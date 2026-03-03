@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Orc_Rider
+  m_EditorClassIdentifier: 
+  unitName: Orc Rider
+  icon: {fileID: -8093549492249020654, guid: 84738d3fcace6b247910f0f9a1c603a3, type: 3}
+  description: 
+  prefab_Player: {fileID: 8493904586213830810, guid: 1e5ee97dd5218f84d990d2be255781e6, type: 3}
+  prefab_Enemy: {fileID: 293245210528726271, guid: cbb8ff9a7e8d17e438aa1d4eac7da77b, type: 3}
+  cost: 500
+  incomeBonus: 75
+  supplyCost: 5
+  hp: 1200
+  damage: 75
+  moveSpeed: 5
+  attackRange: 1.5
+  visionRange: 6
+  attackSpeed: 1.5

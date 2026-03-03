@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Armored_Axeman
+  m_EditorClassIdentifier: 
+  unitName: Armored Axeman
+  icon: {fileID: -8730611281745357216, guid: d06095e6a616044429eb7449c7cad798, type: 3}
+  description: 
+  prefab_Player: {fileID: 5651491385240479305, guid: c24c6f30f24bf5a4baaf48ad872010d4, type: 3}
+  prefab_Enemy: {fileID: 3636077955988838700, guid: 9aba0e9f68d1ff744ad41844eafbe76d, type: 3}
+  cost: 380
+  incomeBonus: 45
+  supplyCost: 4
+  hp: 1300
+  damage: 60
+  moveSpeed: 1.5
+  attackRange: 1.3
+  visionRange: 5
+  attackSpeed: 1.8

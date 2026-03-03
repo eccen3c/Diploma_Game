@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2776716138391230333}
   - component: {fileID: 2385792862334627503}
   - component: {fileID: 2482523917729355221}
+  - component: {fileID: 3259427346156506105}
   m_Layer: 8
   m_Name: Archer-RED
   m_TagString: Enemy
@@ -35,6 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7655560638911473336}
+  - {fileID: 6153702058675039707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3837967664392764645
@@ -119,7 +121,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 1817101277007986732}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 95e4ff931a2459347ad17f90f9959932, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -142,8 +144,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0002445114, y: 0.01505155}
-  m_Size: {x: 0.09189292, y: 0.03506322}
+  m_Offset: {x: -0.0051372238, y: 0.017660996}
+  m_Size: {x: 0.082107745, y: 0.02984438}
   m_Direction: 1
 --- !u!50 &2385792862334627503
 Rigidbody2D:
@@ -191,8 +193,85 @@ MonoBehaviour:
   visionRange: 0
   attackSpeed: 0
   projectilePrefab: {fileID: 6792228273050918029, guid: cf280788333557945b652b0aacf56919, type: 3}
-  avoidanceRadius: 0.8
+  aimPoint: {fileID: 6153702058675039707}
+  avoidanceRadius: 0.55
   avoidanceForce: 2
+--- !u!61 &3259427346156506105
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817101277007986732}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.006548336, y: 0.10363335}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.49418172, y: 0.13839951}
+    oldSize: {x: 0.22, y: 0.2}
+    newSize: {x: 0.21, y: 0.25}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.10127057, y: 0.13737349}
+  m_EdgeRadius: 0
+--- !u!1 &6359470604942009172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6153702058675039707}
+  m_Layer: 0
+  m_Name: AimPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6153702058675039707
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6359470604942009172}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0038, y: 0.071, z: -0.00008062353}
+  m_LocalScale: {x: 0.16666667, y: 0.16666667, z: 0.16666667}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7742402813813027560}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7438155782054515288
 GameObject:
   m_ObjectHideFlags: 0

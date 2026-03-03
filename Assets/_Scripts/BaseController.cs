@@ -11,6 +11,9 @@ public class BaseController : MonoBehaviour
     [Header("UI")]
     public TextMeshPro textHP; // Ссылка на текст с жизнями
 
+    [Header("Aiming System (НОВОЕ)")]
+    public Transform aimPoint;
+
     [Header("Combat Settings (New)")]
     public GameObject projectilePrefab; // Ссылка на префаб фаербола
     public float attackRange = 15f;     // Дальность стрельбы
@@ -55,6 +58,8 @@ public class BaseController : MonoBehaviour
 
         foreach (GameObject enemy in enemies)
         {
+            UnitController unit = enemy.GetComponent<UnitController>();
+            if (unit != null && unit.hp <= 0) continue;
             float distance = Vector2.Distance(transform.position, enemy.transform.position);
             if (distance < minDistance)
             {
@@ -69,23 +74,27 @@ public class BaseController : MonoBehaviour
     {
         if (projectilePrefab == null) return;
 
-        // 1. Создаем пулю
-        GameObject projObj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        // Определяем точку ЦЕЛИ (AimPoint врага)
+        Transform targetTransform = target.transform;
 
-        // 2. Получаем скрипт пули
+        UnitController enemyUnit = target.GetComponent<UnitController>();
+        if (enemyUnit != null && enemyUnit.aimPoint != null) targetTransform = enemyUnit.aimPoint;
+
+        BaseController enemyBase = target.GetComponent<BaseController>();
+        if (enemyBase != null && enemyBase.aimPoint != null) targetTransform = enemyBase.aimPoint;
+
+
+        // Определяем точку СПАВНА (наш AimPoint или центр базы)
+        Vector3 spawnPos = (aimPoint != null) ? aimPoint.position : transform.position;
+
+        GameObject projObj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
         ProjectileController projScript = projObj.GetComponent<ProjectileController>();
 
-        // 3. Если скрипт есть — передаем ему цель
         if (projScript != null)
         {
-            // Передаем цель И свой тег (gameObject.tag), чтобы кристалл не бил своих
-            projScript.SetTarget(target.transform, gameObject.tag);
-            // Важная деталь: Чтобы пуля не ударила саму базу при рождении, 
-            // можно временно отключить коллизию или настроить слои, 
-            // но пока оставим так (триггер пули обычно не бьет базу).
+            projScript.SetTarget(targetTransform, gameObject.tag);
         }
     }
-
     // --- ЛОГИКА ЗДОРОВЬЯ ---
     public void TakeDamage(int damage)
     {

@@ -13,6 +13,9 @@ public class UnitController : MonoBehaviour
     [Header("Ranged Settings (Для лучников/магов)")]
     public GameObject projectilePrefab; // <-- НОВОЕ: Сюда кидай префаб стрелы. Если пусто = ближник.
 
+    [Header("Aiming System")]
+    public Transform aimPoint;
+
     [Header("Настройки толпы")]
     public float avoidanceRadius = 0.5f;
     public float avoidanceForce = 2.0f;
@@ -114,16 +117,35 @@ public class UnitController : MonoBehaviour
 
         Vector2 avoidDir = Vector2.zero;
         Collider2D[] neighbors = Physics2D.OverlapCircleAll(transform.position, avoidanceRadius);
+
         foreach (var hit in neighbors)
         {
             if (hit.CompareTag(myTag) && hit.gameObject != gameObject)
             {
+                if (hit.isTrigger) continue; // Игнорируем хитбоксы груди и базы
+
                 Vector2 away = transform.position - hit.transform.position;
-                avoidDir += away.normalized / (away.magnitude + 0.1f);
+                float distance = away.magnitude;
+
+                // Защита от спавна пиксель-в-пиксель (чтобы не было деления на ноль)
+                if (distance <= 0.001f)
+                {
+                    away = new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
+                    distance = away.magnitude;
+                }
+
+                // 1. Чем ближе сосед, тем сильнее отталкиваемся
+                float pushStrength = Mathf.Clamp01(1f - (distance / avoidanceRadius));
+
+                // 2. Вектор "вбок" (перпендикуляр), чтобы плавно обтекать
+                Vector2 sideSlip = new Vector2(-away.y, away.x).normalized * 0.5f;
+
+                // 3. Смешиваем отталкивание назад и скольжение вбок
+                avoidDir += (away.normalized + sideSlip) * pushStrength;
             }
         }
 
-        // Магнит к линии
+        // Магнит к линии (чтобы они не разбредались слишком высоко/низко)
         float desiredY = 0f;
         Vector2 laneCorrection = Vector2.zero;
         if (Mathf.Abs(transform.position.y - desiredY) > 0.5f)
@@ -133,6 +155,7 @@ public class UnitController : MonoBehaviour
             laneCorrection = new Vector2(0, dirY).normalized * 0.5f;
         }
 
+        // Итоговое направление = Вперед + Обтекание + Магнит к линии
         Vector2 finalDir = (targetDir + avoidDir * avoidanceForce + laneCorrection).normalized;
 
         if (rb) rb.MovePosition(rb.position + finalDir * speed * Time.fixedDeltaTime);
@@ -200,27 +223,45 @@ public class UnitController : MonoBehaviour
     {
         if (currentTarget == null) return;
 
-        // 1. ЕСЛИ ЭТО СТРЕЛОК
+        // --- ЛОГИКА AIM POINT (Куда стрелять?) ---
+        Transform targetTransform = currentTarget; // По умолчанию - в ноги (root)
+
+        // 1. Пробуем найти AimPoint у Юнита
+        UnitController enemyUnit = currentTarget.GetComponent<UnitController>();
+        if (enemyUnit != null && enemyUnit.aimPoint != null)
+        {
+            targetTransform = enemyUnit.aimPoint;
+        }
+        // 2. Пробуем найти AimPoint у Базы
+        else
+        {
+            BaseController enemyBase = currentTarget.GetComponent<BaseController>();
+            if (enemyBase != null && enemyBase.aimPoint != null)
+            {
+                targetTransform = enemyBase.aimPoint;
+            }
+        }
+        // ----------------------------------------
+
+
         if (projectilePrefab != null)
         {
-            GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+            // Стреляем от СВОЕГО AimPoint (если он есть), иначе от ног
+            Vector3 spawnPos = (aimPoint != null) ? aimPoint.position : transform.position;
 
+            GameObject proj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
             ProjectileController pc = proj.GetComponent<ProjectileController>();
+
             if (pc != null)
             {
                 pc.damage = (int)this.damage;
-
-                // ВАЖНО: Передаем цель И свой тег (this.tag)
-                // Теперь стрела знает, что она "Blue" или "Red" и не будет бить своих
-                pc.SetTarget(currentTarget, this.tag);
+                // Передаем КОНКРЕТНУЮ точку (AimPoint или ноги)
+                pc.SetTarget(targetTransform, this.tag);
             }
         }
-        // 2. ЕСЛИ БЛИЖНИК (код без изменений)
-        else
+        else // Ближний бой
         {
-            UnitController unit = currentTarget.GetComponent<UnitController>();
-            if (unit) unit.TakeDamage(damage);
-
+            if (enemyUnit) enemyUnit.TakeDamage(damage);
             BaseController baseCtrl = currentTarget.GetComponent<BaseController>();
             if (baseCtrl) baseCtrl.TakeDamage((int)damage);
         }
@@ -236,7 +277,14 @@ public class UnitController : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        if (GetComponent<Collider2D>()) GetComponent<Collider2D>().enabled = false;
+        // --- ИСПРАВЛЕНИЕ: Отключаем ВСЕ коллайдеры (и ноги, и грудь) ---
+        Collider2D[] colliders = GetComponents<Collider2D>();
+        foreach (Collider2D col in colliders)
+        {
+            col.enabled = false;
+        }
+        // ---------------------------------------------------------------
+
         if (rb) rb.simulated = false;
 
         if (anim) anim.SetTrigger("die");

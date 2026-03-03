@@ -184,5 +184,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  damage: 25
-  targetTag: Enemy
+  damage: 220
+  hasExplosion: 0
+  explosionDuration: 0.4
