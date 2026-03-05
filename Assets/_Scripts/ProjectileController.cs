@@ -1,71 +1,86 @@
 using UnityEngine;
+using System.Collections;
 
 public class ProjectileController : MonoBehaviour
 {
-    [Header("Параметры")]
-    public float speed = 12f; // Чуть быстрее, чтобы догоняла
+    public float speed = 10f;
+    public int damage = 25;
 
-    private int damage = 10;
-    private string targetTag;
-    private Transform targetTransform; // Конкретная жертва
-    private Vector3 lastKnownPosition; // Куда лететь, если жертва умерла
+    [Header("Settings")]
+    public bool hasExplosion = false; // <-- НОВАЯ ГАЛОЧКА!
+    public float explosionDuration = 0.4f; // Время взрыва (если он есть)
 
-    // Теперь мы принимаем Transform target
-    public void Setup(Transform target, string tagToHit, int dmg)
+    private Transform target;
+    private string ownerTag;
+    private Vector3 lastDirection;
+
+    private bool hasHit = false;
+    private Animator anim;
+
+    void Start()
     {
-        targetTransform = target;
-        targetTag = tagToHit;
-        damage = dmg;
+        anim = GetComponent<Animator>();
+        Destroy(gameObject, 5f);
+        lastDirection = transform.right;
+    }
 
-        // Если цель сразу мертва, летим просто вперед
-        if (target != null) lastKnownPosition = target.position;
-        else lastKnownPosition = transform.position + transform.right * 10f;
-
-        Destroy(gameObject, 4.0f); // Защита от бесконечного полета
+    public void SetTarget(Transform newTarget, string tag)
+    {
+        target = newTarget;
+        ownerTag = tag;
     }
 
     void Update()
     {
-        // 1. Если цель жива - летим прямо в неё
-        if (targetTransform != null)
+        if (hasHit) return;
+
+        if (target != null)
         {
-            // Обновляем последнюю позицию
-            lastKnownPosition = targetTransform.position;
+            transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
 
-            // Двигаемся к цели (MoveTowards делает точное движение в точку)
-            transform.position = Vector3.MoveTowards(transform.position, targetTransform.position, speed * Time.deltaTime);
-
-            // Поворачиваем стрелу носом к цели (для красоты)
-            Vector3 dir = targetTransform.position - transform.position;
+            Vector3 dir = target.position - transform.position;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+
+            lastDirection = dir.normalized;
         }
         else
         {
-            // 2. Если цель умерла в полете - летим в то место, где она была в последний раз
-            transform.position = Vector3.MoveTowards(transform.position, lastKnownPosition, speed * Time.deltaTime);
-
-            // Если долетели до пустого места - уничтожаемся
-            if (Vector3.Distance(transform.position, lastKnownPosition) < 0.1f)
-            {
-                Destroy(gameObject);
-            }
+            transform.position += lastDirection * speed * Time.deltaTime;
         }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // Логика попадания та же самая
-        if (collision.CompareTag(targetTag) ||
-           (collision.GetComponent<BaseController>() && !collision.CompareTag(gameObject.tag)))
+        if (hasHit) return;
+
+        // Убрали проверку на триггер, чтобы попадать в тело!
+        if (collision.CompareTag(ownerTag)) return;
+
+        UnitController unit = collision.GetComponent<UnitController>();
+        BaseController baseCtrl = collision.GetComponent<BaseController>();
+
+        if (unit != null || baseCtrl != null)
         {
-            UnitBrain unit = collision.GetComponent<UnitBrain>();
-            if (unit != null) unit.TakeDamage(damage);
+            if (unit) unit.TakeDamage(damage);
+            if (baseCtrl) baseCtrl.TakeDamage(damage);
 
-            BaseController baseCtrl = collision.GetComponent<BaseController>();
-            if (baseCtrl != null) baseCtrl.TakeDamage(damage);
-
-            Destroy(gameObject);
+            StartCoroutine(DestroyRoutine());
         }
+    }
+
+    IEnumerator DestroyRoutine()
+    {
+        hasHit = true;
+
+        // Взрываемся ТОЛЬКО если стоит галочка И есть аниматор
+        if (hasExplosion && anim != null)
+        {
+            anim.SetTrigger("explode"); // Запускаем анимацию
+            yield return new WaitForSeconds(explosionDuration); // Ждем пока бахнет
+        }
+
+        // Если галочки нет — удаляем СРАЗУ (без задержки)
+        Destroy(gameObject);
     }
 }

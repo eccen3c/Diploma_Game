@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Elite_Orc
+  m_EditorClassIdentifier: 
+  unitName: Elite Orc
+  icon: {fileID: 3460288942000146560, guid: 6fa774290b9675641b99bbe0b14970be, type: 3}
+  description: 
+  prefab_Player: {fileID: 7456839549355050295, guid: e36dbe47e6e9b7b4899ce015fb9ce2d6, type: 3}
+  prefab_Enemy: {fileID: 7453550919231895005, guid: a03f0331ba674a344908aac6f3274c4d, type: 3}
+  cost: 420
+  incomeBonus: 60
+  supplyCost: 4
+  hp: 900
+  damage: 70
+  moveSpeed: 2.4
+  attackRange: 1.3
+  visionRange: 5
+  attackSpeed: 1.4

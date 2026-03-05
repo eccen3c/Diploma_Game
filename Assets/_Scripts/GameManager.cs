@@ -8,15 +8,9 @@ public class GameManager : MonoBehaviour
 
     public bool isGameOver = false;
 
-    [Header("Экономика")]
-    public int gold = 100;
-    public int passiveIncome = 5;
-    public float incomeRate = 1f;
-
-    [Header("UI")]
-    public TextMeshProUGUI goldText;
+    [Header("UI Панели")]
     public GameObject gameOverPanel; // Панель проигрыша
-    public GameObject pausePanel;    // Панель паузы (НОВОЕ)
+    public GameObject pausePanel;    // Панель паузы
     public TextMeshProUGUI resultText;
 
     // Переменная, чтобы знать, на паузе мы или нет
@@ -26,55 +20,34 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Скрываем все панели при старте
+        // Скрываем панели при старте
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(false);
 
-        UpdateUI();
-        InvokeRepeating("AddPassiveGold", 1f, incomeRate);
-
-        // Обязательно запускаем время (вдруг вышли из паузы)
         Time.timeScale = 1;
     }
 
-    void AddPassiveGold()
-    {
-        gold += passiveIncome;
-        UpdateUI();
-    }
-
-    public void SpendGold(int amount)
-    {
-        gold -= amount;
-        UpdateUI();
-    }
-
-    void UpdateUI()
-    {
-        if (goldText != null) goldText.text = "Gold: " + gold;
-    }
-
-    // --- Управление Игрой ---
+    // --- Управление Системой (Пауза, Меню, Рестарт) ---
 
     public void TogglePause()
     {
-        isPaused = !isPaused; // Переключаем (было true стало false и наоборот)
+        isPaused = !isPaused;
 
         if (isPaused)
         {
-            Time.timeScale = 0; // Время стоп
-            pausePanel.SetActive(true); // Показать меню
+            Time.timeScale = 0; // Стоп
+            if (pausePanel) pausePanel.SetActive(true);
         }
         else
         {
-            Time.timeScale = 1; // Время пошло
-            pausePanel.SetActive(false); // Скрыть меню
+            Time.timeScale = 1; // Играем
+            if (pausePanel) pausePanel.SetActive(false);
         }
     }
 
     public void GoToMainMenu()
     {
-        Time.timeScale = 1; // Важно вернуть время перед выходом!
+        Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -84,22 +57,36 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void EndGame(bool playerWon)
+    // --- ЛОГИКА КОНЦА ИГРЫ (ОБНОВЛЕНА) ---
+
+    // Теперь метод называется GameOver и принимает тег проигравшего
+    public void GameOver(string loserTag)
     {
-        gameOverPanel.SetActive(true);
+        if (isGameOver) return; // Чтобы не вызывалось дважды
+
+        isGameOver = true;
+
+        // Включаем панель
+        if (gameOverPanel) gameOverPanel.SetActive(true);
+
+        // Останавливаем время
         Time.timeScale = 0;
 
-        if (playerWon)
+        // Пишем результат
+        if (resultText != null)
         {
-            GameManager.instance.isGameOver = true;
-            resultText.text = "YOU WIN!";
-            resultText.color = Color.green;
-        }
-        else
-        {
-            GameManager.instance.isGameOver = true;
-            resultText.text = "DEFEAT";
-            resultText.color = Color.red;
+            // Если проиграл Игрок ("Player") -> Значит поражение
+            if (loserTag == "Player")
+            {
+                resultText.text = "DEFEAT";
+                resultText.color = Color.red;
+            }
+            // Если проиграл Враг ("Enemy") -> Значит победа
+            else
+            {
+                resultText.text = "VICTORY!";
+                resultText.color = Color.green;
+            }
         }
     }
 }

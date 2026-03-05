@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Knight
+  m_EditorClassIdentifier: 
+  unitName: Knight
+  icon: {fileID: -2871633289480588777, guid: 715eaf237d90dd5439c003d06fe8fc5a, type: 3}
+  description: 
+  prefab_Player: {fileID: 6512502110893993046, guid: b19e9c7885fb9ba418ba71c1a5f0d2de, type: 3}
+  prefab_Enemy: {fileID: 1682142063968335548, guid: d8c304b7c0210e0478a74e6ae4f9199a, type: 3}
+  cost: 150
+  incomeBonus: 10
+  supplyCost: 2
+  hp: 550
+  damage: 36
+  moveSpeed: 2.1
+  attackRange: 1.3
+  visionRange: 5
+  attackSpeed: 1.4

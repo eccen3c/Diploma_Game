@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Lancer
+  m_EditorClassIdentifier: 
+  unitName: Lancer
+  icon: {fileID: -146130800703536882, guid: cb9830bff917efb4baa3b8a622f36c9f, type: 3}
+  description: 
+  prefab_Player: {fileID: 1055897878636807854, guid: 9530ce1cf44ad22479c14ac15aac5d95, type: 3}
+  prefab_Enemy: {fileID: 6192124225902428446, guid: 66c3d156fd84f2b4aa3282e34e8a86dc, type: 3}
+  cost: 950
+  incomeBonus: 150
+  supplyCost: 8
+  hp: 3400
+  damage: 95
+  moveSpeed: 4.3
+  attackRange: 1.9
+  visionRange: 8
+  attackSpeed: 1.8

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f809b44c0de3b4491a1af06575c2b9, type: 3}
+  m_Name: Unit_Werewolf
+  m_EditorClassIdentifier: 
+  unitName: Werewolf
+  icon: {fileID: 3241731569213813822, guid: a9f86e9ad8555674ea9b7a361038f08e, type: 3}
+  description: 
+  prefab_Player: {fileID: 5340931821862234733, guid: 11ef338d86652c242bee0b5138643f28, type: 3}
+  prefab_Enemy: {fileID: 5479680869238350606, guid: 0c0612c9c50b18042b6a28a93ad1aaf1, type: 3}
+  cost: 260
+  incomeBonus: 40
+  supplyCost: 3
+  hp: 420
+  damage: 55
+  moveSpeed: 4.6
+  attackRange: 1.3
+  visionRange: 5
+  attackSpeed: 1.2
