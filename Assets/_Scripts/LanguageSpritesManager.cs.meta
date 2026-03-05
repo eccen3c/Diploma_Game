@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 3f16cd1bfce69c44cb5d6178c765a4b4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playButtonImage: {instanceID: 0}
+  - playEng: {instanceID: 0}
+  - playUkr: {instanceID: 0}
+  - settingsButtonImage: {instanceID: 0}
+  - settingsEng: {instanceID: 0}
+  - settingsUkr: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
