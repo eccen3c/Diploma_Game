@@ -223,6 +223,11 @@ public class UnitController : MonoBehaviour
     {
         if (currentTarget == null) return;
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayHitSound();
+        }
+
         // --- ЛОГИКА AIM POINT (Куда стрелять?) ---
         Transform targetTransform = currentTarget; // По умолчанию - в ноги (root)
 

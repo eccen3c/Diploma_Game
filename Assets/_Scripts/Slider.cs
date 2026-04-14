@@ -3,24 +3,71 @@ using UnityEngine.UI;
 
 public class PixelSlider : MonoBehaviour
 {
-    public AudioSource musicSource;
-    public Image backgroundDisplay; // Твій об'єкт Background зі слайдера
-    public Sprite[] frames;         // Сюди закинь 5 кадрів (Frame_0...Frame_4)
+    [Header("Налаштування Аудіо")]
+    public AudioSource audioSource; // Сюди тягни або Музику, або Звуки
+    public Image backgroundDisplay;
+    public Sprite[] frames;
+
+    [Header("УНІКАЛЬНИЙ КЛЮЧ (MusicVol або SoundVol)")]
+    public string saveKey = "MusicVolume";
+
+    private Slider slider;
+
+    void Awake()
+    {
+        slider = GetComponent<Slider>();
+    }
+
+    void OnEnable()
+    {
+        SyncSlider();
+    }
+
+    void Start()
+    {
+        if (slider != null)
+        {
+            slider.onValueChanged.RemoveAllListeners();
+            slider.onValueChanged.AddListener(OnSliderChanged);
+        }
+
+        // Примусово ставимо звук при старті (на випадок, якщо панель прихована)
+        ApplyStoredVolume();
+        SyncSlider();
+    }
+
+    private void ApplyStoredVolume()
+    {
+        float savedValue = PlayerPrefs.GetFloat(saveKey, 1f);
+        if (audioSource != null)
+            audioSource.volume = savedValue;
+    }
+
+    public void SyncSlider()
+    {
+        float savedValue = PlayerPrefs.GetFloat(saveKey, 1f);
+        if (slider != null)
+            slider.value = savedValue;
+
+        UpdateSliderVisuals(savedValue);
+    }
 
     public void OnSliderChanged(float value)
     {
-        // 1. Встановлюємо гучність (value у слайдера за замовчуванням 0...1)
-        if (musicSource != null)
-            musicSource.volume = value;
+        PlayerPrefs.SetFloat(saveKey, value);
+        PlayerPrefs.Save();
+        UpdateSliderVisuals(value);
+    }
 
-        // 2. Логіка вибору кадру:
-        // frames.Length у нас 5. Value * 4 дасть нам індекси від 0 до 4.
-        int index = Mathf.RoundToInt(value * (frames.Length - 1));
+    private void UpdateSliderVisuals(float value)
+    {
+        if (audioSource != null)
+            audioSource.volume = value;
 
-        // 3. Міняємо картинку
-        if (backgroundDisplay != null && frames.Length > 0)
+        if (frames != null && frames.Length > 0 && backgroundDisplay != null)
         {
+            int index = Mathf.Clamp(Mathf.RoundToInt(value * (frames.Length - 1)), 0, frames.Length - 1);
             backgroundDisplay.sprite = frames[index];
         }
     }
-}
+}   

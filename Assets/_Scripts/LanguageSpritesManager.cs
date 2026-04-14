@@ -7,28 +7,30 @@ public class LanguageSpritesManager : MonoBehaviour
 {
     public bool isUkrainian = false;
 
-    [Header("Слайдери звуків бою")]
-    public Slider engCombatSlider;
-    public Slider ukrCombatSlider;
+    [Header("Кнопки Паузи")]
+    public Image resumeButtonImage;
+    public Sprite resumeEng, resumeUkr;
+    public Image menuButtonImage;
+    public Sprite menuEng, menuUkr;
+    public Image settingsPauseButtonImage;
+    public Sprite settingsPauseEng, settingsPauseUkr;
 
-    [Header("Налаштування роздільної здатності")]
+    [Header("Кнопки Game Over")]
+    public Image gameOverRestartImage;
+    public Sprite restartEng, restartUkr;
+    public Image gameOverMenuImage;
+    public Sprite menuOVerEng, menuOVerUkr;
+
+    [Header("Налаштування відео")]
     public TMP_Dropdown engResDropdown;
     public TMP_Dropdown ukrResDropdown;
     private Resolution[] resolutions;
-
-    [Header("Синхронізація чекбоксів")]
     public Toggle engFullscreenToggle;
     public Toggle ukrFullscreenToggle;
 
-    [Header("Панелі налаштувань (Layouts)")]
+    [Header("Панелі та Лейбли")]
     public GameObject engLayout;
     public GameObject ukrLayout;
-
-    [Header("Синхронізація слайдерів гучності")]
-    public Slider engVolumeSlider;
-    public Slider ukrVolumeSlider;
-
-    [Header("Центральний перемикач (плашка)")]
     public Image languageDisplayImage;
     public Sprite langLabelEng;
     public Sprite langLabelUkr;
@@ -41,7 +43,7 @@ public class LanguageSpritesManager : MonoBehaviour
     public Image multiButtonImage;
     public Sprite multiEng, multiUkr;
 
-    [Header("Режими гри (Single)")]
+    [Header("Режими гри")]
     public Image easyButtonImage;
     public Sprite easyEng, easyUkr;
     public Image mediumButtonImage;
@@ -49,161 +51,150 @@ public class LanguageSpritesManager : MonoBehaviour
     public Image hardButtonImage;
     public Sprite hardEng, hardUkr;
 
-    [Header("Мультиплеєр (Multi)")]
+    [Header("Мультиплеєр")]
     public Image player2ButtonImage;
     public Sprite player2Eng, player2Ukr;
     public Image onlineButtonImage;
     public Sprite onlineEng, onlineUkr;
 
+    void Awake()
+    {
+        // Це вирішує твою проблему: зчитуємо мову, як тільки скрипт з'явився
+        RefreshLanguage();
+    }
+
+    void OnEnable()
+    {
+        RefreshLanguage();
+    }
+
     void Start()
     {
         SetupResolutions();
+        RefreshLanguage();
 
-        // Завантажуємо збережені значення, щоб не скидалося на 1 щоразу
-        float savedVol = PlayerPrefs.GetFloat("MusicVolume", 1f);
-        float savedCombat = PlayerPrefs.GetFloat("CombatVolume", 1f);
+        bool savedFS = PlayerPrefs.GetInt("IsFullscreen", 1) == 1;
+        Screen.fullScreen = savedFS;
+        if (engFullscreenToggle != null) engFullscreenToggle.isOn = savedFS;
+        if (ukrFullscreenToggle != null) ukrFullscreenToggle.isOn = savedFS;
+    }
 
-        if (engVolumeSlider != null) engVolumeSlider.value = savedVol;
-        if (ukrVolumeSlider != null) ukrVolumeSlider.value = savedVol;
-        if (engCombatSlider != null) engCombatSlider.value = savedCombat;
-        if (ukrCombatSlider != null) ukrCombatSlider.value = savedCombat;
+    public void RefreshLanguage()
+    {
+        // Зчитуємо збережену мову з пам'яті
+        isUkrainian = PlayerPrefs.GetInt("IsUkrainian", 0) == 1;
 
+        // Вмикаємо потрібний лейаут в налаштуваннях
         if (engLayout != null) engLayout.SetActive(!isUkrainian);
         if (ukrLayout != null) ukrLayout.SetActive(isUkrainian);
+
+        // Міняємо іконку мови
+        if (languageDisplayImage != null)
+            languageDisplayImage.sprite = isUkrainian ? langLabelUkr : langLabelEng;
+
         UpdateButtonsUI();
-    }
-
-    public void SaveMusicVolume(float val)
-    {
-        PlayerPrefs.SetFloat("MusicVolume", val);
-        PlayerPrefs.Save();
-
-        // Синхронізуємо цифру
-        if (isUkrainian && engVolumeSlider != null) engVolumeSlider.value = val;
-        else if (!isUkrainian && ukrVolumeSlider != null) ukrVolumeSlider.value = val;
-    }
-
-    public void SaveCombatVolume(float val)
-    {
-        PlayerPrefs.SetFloat("CombatVolume", val);
-        PlayerPrefs.Save();
-
-        // Синхронізуємо цифру
-        if (isUkrainian && engCombatSlider != null) engCombatSlider.value = val;
-        else if (!isUkrainian && ukrCombatSlider != null) ukrCombatSlider.value = val;
     }
 
     public void SwitchLanguage()
     {
         isUkrainian = !isUkrainian;
+        PlayerPrefs.SetInt("IsUkrainian", isUkrainian ? 1 : 0);
+        PlayerPrefs.Save();
+        RefreshLanguage();
+    }
 
-        if (engLayout != null) engLayout.SetActive(!isUkrainian);
-        if (ukrLayout != null) ukrLayout.SetActive(isUkrainian);
-
-        if (languageDisplayImage != null)
-            languageDisplayImage.sprite = isUkrainian ? langLabelUkr : langLabelEng;
-
-        // --- СИНХРОНІЗАЦІЯ ТА ОНОВЛЕННЯ ВІЗУАЛУ ---
+    public void UpdateButtonsUI()
+    {
         if (isUkrainian)
         {
-            // Музика
-            if (ukrVolumeSlider != null && engVolumeSlider != null)
-            {
-                ukrVolumeSlider.value = engVolumeSlider.value;
-                ukrVolumeSlider.GetComponent<PixelSlider>()?.OnSliderChanged(ukrVolumeSlider.value);
-            }
-            // Звуки
-            if (ukrCombatSlider != null && engCombatSlider != null)
-            {
-                ukrCombatSlider.value = engCombatSlider.value;
-                ukrCombatSlider.GetComponent<PixelSlider>()?.OnSliderChanged(ukrCombatSlider.value);
-            }
+            // УКРАЇНСЬКІ СПРАЙТИ
+            SetS(playButtonImage, playUkr);
+            SetS(settingsButtonImage, settingsUkr);
+            SetS(multiButtonImage, multiUkr);
+            SetS(easyButtonImage, easyUkr);
+            SetS(mediumButtonImage, mediumUkr);
+            SetS(hardButtonImage, hardUkr);
+            SetS(player2ButtonImage, player2Ukr);
+            SetS(onlineButtonImage, onlineUkr);
+
+            SetS(resumeButtonImage, resumeUkr);
+            SetS(menuButtonImage, menuUkr);
+            SetS(settingsPauseButtonImage, settingsPauseUkr);
+
+            SetS(gameOverRestartImage, restartUkr);
+            SetS(gameOverMenuImage, menuOVerUkr);
         }
         else
         {
-            // Музика
-            if (engVolumeSlider != null && ukrVolumeSlider != null)
-            {
-                engVolumeSlider.value = ukrVolumeSlider.value;
-                engVolumeSlider.GetComponent<PixelSlider>()?.OnSliderChanged(engVolumeSlider.value);
-            }
-            // Звуки
-            if (engCombatSlider != null && ukrCombatSlider != null)
-            {
-                engCombatSlider.value = ukrCombatSlider.value;
-                engCombatSlider.GetComponent<PixelSlider>()?.OnSliderChanged(engCombatSlider.value);
-            }
+            // АНГЛІЙСЬКІ СПРАЙТИ
+            SetS(playButtonImage, playEng);
+            SetS(settingsButtonImage, settingsEng);
+            SetS(multiButtonImage, multiEng);
+            SetS(easyButtonImage, easyEng);
+            SetS(mediumButtonImage, mediumEng);
+            SetS(hardButtonImage, hardEng);
+            SetS(player2ButtonImage, player2Eng);
+            SetS(onlineButtonImage, onlineEng);
+
+            SetS(resumeButtonImage, resumeEng);
+            SetS(menuButtonImage, menuEng);
+            SetS(settingsPauseButtonImage, settingsPauseEng);
+
+            SetS(gameOverRestartImage, restartEng);
+            SetS(gameOverMenuImage, menuOVerEng);
         }
-
-        // Синхронізація фулскріну
-        if (isUkrainian) ukrFullscreenToggle.isOn = engFullscreenToggle.isOn;
-        else engFullscreenToggle.isOn = ukrFullscreenToggle.isOn;
-
-        UpdateButtonsUI();
     }
 
-    // Решта твоїх методів (SetupResolutions, UpdateButtonsUI тощо) залишаються без змін
+    private void SetS(Image img, Sprite sp)
+    {
+        if (img != null && sp != null)
+            img.sprite = sp;
+    }
+
     private void SetupResolutions()
     {
         resolutions = Screen.resolutions;
+        if (engResDropdown == null || ukrResDropdown == null) return;
+
         engResDropdown.ClearOptions();
         ukrResDropdown.ClearOptions();
+
         List<string> options = new List<string>();
-        int currentResolutionIndex = 0;
+        int currentResIndex = 0;
+
         for (int i = 0; i < resolutions.Length; i++)
         {
-            string option = resolutions[i].width + " x " + resolutions[i].height;
-            options.Add(option);
-            if (resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height)
-                currentResolutionIndex = i;
+            options.Add(resolutions[i].width + " x " + resolutions[i].height);
+            if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height)
+                currentResIndex = i;
         }
+
         engResDropdown.AddOptions(options);
         ukrResDropdown.AddOptions(options);
-        engResDropdown.value = currentResolutionIndex;
-        ukrResDropdown.value = currentResolutionIndex;
+
+        int savedRes = PlayerPrefs.GetInt("SelectedRes", currentResIndex);
+        if (savedRes < resolutions.Length)
+        {
+            engResDropdown.value = savedRes;
+            ukrResDropdown.value = savedRes;
+        }
+
         engResDropdown.RefreshShownValue();
         ukrResDropdown.RefreshShownValue();
     }
 
-    public void SetResolution(int resolutionIndex)
+    public void SetResolution(int index)
     {
-        if (resolutions == null || resolutionIndex >= resolutions.Length) return;
-        Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-        engResDropdown.value = resolutionIndex;
-        ukrResDropdown.value = resolutionIndex;
-    }
-
-    private void UpdateButtonsUI()
-    {
-        if (isUkrainian)
-        {
-            if (playButtonImage) playButtonImage.sprite = playUkr;
-            if (settingsButtonImage) settingsButtonImage.sprite = settingsUkr;
-            if (multiButtonImage) multiButtonImage.sprite = multiUkr;
-            if (easyButtonImage) easyButtonImage.sprite = easyUkr;
-            if (mediumButtonImage) mediumButtonImage.sprite = mediumUkr;
-            if (hardButtonImage) hardButtonImage.sprite = hardUkr;
-            if (player2ButtonImage) player2ButtonImage.sprite = player2Ukr;
-            if (onlineButtonImage) onlineButtonImage.sprite = onlineUkr;
-        }
-        else
-        {
-            if (playButtonImage) playButtonImage.sprite = playEng;
-            if (settingsButtonImage) settingsButtonImage.sprite = settingsEng;
-            if (multiButtonImage) multiButtonImage.sprite = multiEng;
-            if (easyButtonImage) easyButtonImage.sprite = easyEng;
-            if (mediumButtonImage) mediumButtonImage.sprite = mediumEng;
-            if (hardButtonImage) hardButtonImage.sprite = hardEng;
-            if (player2ButtonImage) player2ButtonImage.sprite = player2Eng;
-            if (onlineButtonImage) onlineButtonImage.sprite = onlineEng;
-        }
+        if (resolutions == null || index >= resolutions.Length) return;
+        Screen.SetResolution(resolutions[index].width, resolutions[index].height, Screen.fullScreen);
+        PlayerPrefs.SetInt("SelectedRes", index);
+        PlayerPrefs.Save();
     }
 
     public void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
-        Debug.Log("Повний екран: " + isFullscreen);
+        PlayerPrefs.SetInt("IsFullscreen", isFullscreen ? 1 : 0);
+        PlayerPrefs.Save();
     }
 }

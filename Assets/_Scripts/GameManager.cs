@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,25 +10,34 @@ public class GameManager : MonoBehaviour
     public bool isGameOver = false;
 
     [Header("UI Панели")]
-    public GameObject gameOverPanel; // Панель проигрыша
-    public GameObject pausePanel;    // Панель паузы
+    public GameObject gameOverPanel;
+    public GameObject pausePanel;
     public TextMeshProUGUI resultText;
 
-    // Переменная, чтобы знать, на паузе мы или нет
     private bool isPaused = false;
 
-    void Awake() { instance = this; }
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
-        // Скрываем панели при старте
+        // 1. Сховуємо панелі
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(false);
+
+        // 2. ПРИМУСОВО ОНОВЛЮЄМО МОВУ ПРИ СТАРТІ СЦЕНИ
+        // Це зчитає PlayerPrefs ще до того, як ти натиснеш паузу
+        Invoke("ApplyInitialLanguage", 0.05f);
 
         Time.timeScale = 1;
     }
 
-    // --- Управление Системой (Пауза, Меню, Рестарт) ---
+    private void ApplyInitialLanguage()
+    {
+        FindObjectOfType<LanguageSpritesManager>()?.RefreshLanguage();
+    }
 
     public void TogglePause()
     {
@@ -35,12 +45,14 @@ public class GameManager : MonoBehaviour
 
         if (isPaused)
         {
-            Time.timeScale = 0; // Стоп
             if (pausePanel) pausePanel.SetActive(true);
+            // Оновлюємо, щоб галочка була на місці
+            StartCoroutine(UpdateLanguageNextFrame());
+            Time.timeScale = 0;
         }
         else
         {
-            Time.timeScale = 1; // Играем
+            Time.timeScale = 1;
             if (pausePanel) pausePanel.SetActive(false);
         }
     }
@@ -57,36 +69,38 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // --- ЛОГИКА КОНЦА ИГРЫ (ОБНОВЛЕНА) ---
-
-    // Теперь метод называется GameOver и принимает тег проигравшего
     public void GameOver(string loserTag)
     {
-        if (isGameOver) return; // Чтобы не вызывалось дважды
+        if (isGameOver) return;
 
         isGameOver = true;
-
-        // Включаем панель
         if (gameOverPanel) gameOverPanel.SetActive(true);
 
-        // Останавливаем время
+        // Гарантуємо, що кнопки стануть українськими при програші
+        StartCoroutine(UpdateLanguageNextFrame());
+
         Time.timeScale = 0;
 
-        // Пишем результат
         if (resultText != null)
         {
-            // Если проиграл Игрок ("Player") -> Значит поражение
+            bool isUkr = PlayerPrefs.GetInt("IsUkrainian", 0) == 1;
+
             if (loserTag == "Player")
             {
-                resultText.text = "DEFEAT";
+                resultText.text = isUkr ? "ПОРАЗКА" : "DEFEAT";
                 resultText.color = Color.red;
             }
-            // Если проиграл Враг ("Enemy") -> Значит победа
             else
             {
-                resultText.text = "VICTORY!";
+                resultText.text = isUkr ? "ПЕРЕМОГА!" : "VICTORY!";
                 resultText.color = Color.green;
             }
         }
+    }
+
+    private IEnumerator UpdateLanguageNextFrame()
+    {
+        yield return null;
+        FindObjectOfType<LanguageSpritesManager>()?.RefreshLanguage();
     }
 }

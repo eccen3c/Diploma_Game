@@ -41,7 +41,7 @@ public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandle
         mapHeight = minimapRect.rect.height;
 
         // --- 2. РАСЧЕТ РАЗМЕРА РАМКИ (X и Y) ---
-        CalculateFrameSize();
+        // CalculateFrameSize();
     }
 
     void CalculateFrameSize()
@@ -60,7 +60,7 @@ public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandle
         float frameH = mapHeight * ratioY;
 
         // Устанавливаем размер рамки
-        yellowFrame.sizeDelta = new Vector2(frameW, frameH);
+       //  yellowFrame.sizeDelta = new Vector2(frameW, frameH);
     }
 
     void Update()

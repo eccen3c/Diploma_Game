@@ -1,43 +1,56 @@
 using UnityEngine;
-using TMPro; // Для текста HP
+using UnityEngine.UI;
+using TMPro;
 
 public class BaseController : MonoBehaviour
 {
     [Header("Base Stats")]
-    public int maxHealth = 500;
+    public int maxHealth = 9000;
     private int currentHealth;
-    public bool isPlayerBase; // Галочка: это база игрока?
+    public bool isPlayerBase;
 
-    [Header("UI")]
-    public TextMeshPro textHP; // Ссылка на текст с жизнями
+    [Header("UI Elements")]
+    public TextMeshPro textHP;       // Текст над кристалом
+    public Image hpFillImage;        // ВЕРХНЯ заливка (тане)
+    public Image hpBottomImage;      // НИЖНЯ заливка (підкладка)
+    public Image hpFrameImage;       // Об'єкт рамки (HP_Frame)
+    public Image heartImage;         // Об'єкт сердечка
 
-    [Header("Aiming System (НОВОЕ)")]
+    [Header("Sprites (Assign in Inspector)")]
+    // 0-Зелена, 1-Жовта, 2-Червона, 3-Сіра
+    public Sprite[] hpFillSprites;
+    // 0-Зелена, 1-Жовта, 2-Червона
+    public Sprite[] hpFrameSprites;
+    // 0-Повне, 1-Половина, 2-Пусте
+    public Sprite[] heartSprites;
+
+    [Header("Aiming System")]
     public Transform aimPoint;
 
-    [Header("Combat Settings (New)")]
-    public GameObject projectilePrefab; // Ссылка на префаб фаербола
-    public float attackRange = 15f;     // Дальность стрельбы
-    public float fireRate = 1.5f;       // Пауза между выстрелами
+    [Header("Combat Settings")]
+    public GameObject projectilePrefab;
+    public float attackRange = 15f;
+    public float fireRate = 1.5f;
     private float nextFireTime;
-
-    // В кого мы будем стрелять (определим автоматически)
     private string enemyTag;
 
     void Start()
     {
-        // 1. Настройка здоровья
         currentHealth = maxHealth;
         UpdateUI();
 
-        // 2. Автоматически определяем врага
-        // Если это база Игрока -> Враг "Enemy". Если база Врага -> Враг "Player".
         if (isPlayerBase) enemyTag = "Enemy";
         else enemyTag = "Player";
     }
 
     void Update()
     {
-        // Таймер стрельбы
+        // Тест урону на Space
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TakeDamage(500);
+        }
+
         if (Time.time >= nextFireTime)
         {
             GameObject target = FindClosestEnemy();
@@ -49,12 +62,81 @@ public class BaseController : MonoBehaviour
         }
     }
 
-    // --- ЛОГИКА СТРЕЛЬБЫ ---
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        UpdateUI();
+
+        if (currentHealth <= 0) Die();
+    }
+
+    void UpdateUI()
+    {
+        if (textHP != null) textHP.text = currentHealth.ToString();
+
+        if (hpFillImage != null && hpFillSprites.Length >= 4)
+        {
+            // 1. ПЕРЕВІРКА НА СМЕРТЬ (0 ХП)
+            if (currentHealth <= 0)
+            {
+                // Ставимо fillAmount в 0, сірий колір (3), сіру рамку (3) і пусте серце (3)
+                SetUI(0f, 3, 3, 3);
+                return; // Виходимо з методу, далі рахувати не треба
+            }
+
+            float ratio = (float)currentHealth / maxHealth;
+
+            // 2. Звичайна логіка стадій
+            if (ratio > 0.66f)
+            {
+                float stageFill = (ratio - 0.66f) / 0.34f;
+                SetUI(stageFill, 0, 1, 0);
+            }
+            else if (ratio > 0.33f)
+            {
+                float stageFill = (ratio - 0.33f) / 0.33f;
+                SetUI(stageFill, 1, 2, 1);
+            }
+            else
+            {
+                float stageFill = ratio / 0.33f;
+                // Поки ХП більше 0, але менше 33% — показуємо червоне
+                SetUI(stageFill, 2, 3, 2);
+            }
+        }
+    }
+    void SetUI(float fill, int topIdx, int bottomIdx, int heartIdx)
+    {
+        // Налаштування заливок
+        hpFillImage.fillAmount = fill;
+        hpFillImage.sprite = hpFillSprites[topIdx];
+
+        if (hpBottomImage != null)
+        {
+            hpBottomImage.sprite = hpFillSprites[bottomIdx];
+            hpBottomImage.fillAmount = 1f;
+        }
+
+        // Налаштування рамки (бере колір поточної стадії)
+        if (hpFrameImage != null && hpFrameSprites.Length > topIdx)
+        {
+            hpFrameImage.sprite = hpFrameSprites[topIdx];
+        }
+
+        // Налаштування серця
+        if (heartImage != null && heartSprites.Length > heartIdx)
+        {
+            heartImage.sprite = heartSprites[heartIdx];
+        }
+    }
+
+    // --- ЛОГІКА СТРІЛЬБИ ---
     GameObject FindClosestEnemy()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         GameObject closest = null;
-        float minDistance = attackRange; // Ищем только в радиусе атаки
+        float minDistance = attackRange;
 
         foreach (GameObject enemy in enemies)
         {
@@ -73,59 +155,18 @@ public class BaseController : MonoBehaviour
     void Shoot(GameObject target)
     {
         if (projectilePrefab == null) return;
-
-        // Определяем точку ЦЕЛИ (AimPoint врага)
-        Transform targetTransform = target.transform;
-
-        UnitController enemyUnit = target.GetComponent<UnitController>();
-        if (enemyUnit != null && enemyUnit.aimPoint != null) targetTransform = enemyUnit.aimPoint;
-
-        BaseController enemyBase = target.GetComponent<BaseController>();
-        if (enemyBase != null && enemyBase.aimPoint != null) targetTransform = enemyBase.aimPoint;
-
-
-        // Определяем точку СПАВНА (наш AimPoint или центр базы)
         Vector3 spawnPos = (aimPoint != null) ? aimPoint.position : transform.position;
-
         GameObject projObj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
         ProjectileController projScript = projObj.GetComponent<ProjectileController>();
-
-        if (projScript != null)
-        {
-            projScript.SetTarget(targetTransform, gameObject.tag);
-        }
-    }
-    // --- ЛОГИКА ЗДОРОВЬЯ ---
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        UpdateUI();
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-    void UpdateUI()
-    {
-        if (textHP != null)
-        {
-            textHP.text = currentHealth.ToString();
-        }
+        if (projScript != null) projScript.SetTarget(target.transform, gameObject.tag);
     }
 
     void Die()
     {
-        // Вызываем GameOver из GameManager
-        // Используем тег объекта, чтобы менеджер понял, кто проиграл
-        if (GameManager.instance)
-            GameManager.instance.GameOver(gameObject.tag);
-
+        if (GameManager.instance) GameManager.instance.GameOver(gameObject.tag);
         Destroy(gameObject);
     }
 
-    // Рисуем круг радиуса в редакторе, чтобы было удобно настраивать
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

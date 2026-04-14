@@ -56,6 +56,12 @@ public class GameLoopManager : MonoBehaviour
         }
         else
         {
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayScream();
+            } 
+
             if (isWarmup)
             {
                 isWarmup = false;

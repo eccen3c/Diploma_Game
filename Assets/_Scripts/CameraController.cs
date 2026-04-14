@@ -45,6 +45,7 @@ public class CameraController : MonoBehaviour
 
         if (maxY < minY) pos.y = 0;
         else pos.y = Mathf.Clamp(pos.y, minY, maxY);
+        
 
         transform.position = pos;
     }
