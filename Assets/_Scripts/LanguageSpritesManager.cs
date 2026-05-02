@@ -81,14 +81,19 @@ public class LanguageSpritesManager : MonoBehaviour
 
     public void RefreshLanguage()
     {
-        // Зчитуємо збережену мову з пам'яті
         isUkrainian = PlayerPrefs.GetInt("IsUkrainian", 0) == 1;
 
-        // Вмикаємо потрібний лейаут в налаштуваннях
         if (engLayout != null) engLayout.SetActive(!isUkrainian);
         if (ukrLayout != null) ukrLayout.SetActive(isUkrainian);
 
-        // Міняємо іконку мови
+        // Зчитуємо саме з PlayerPrefs, це найнадійніше джерело істини
+        bool savedFS = PlayerPrefs.GetInt("IsFullscreen", 1) == 1;
+
+        // Важливо: спочатку вимикаємо слухач подій (якщо він є), 
+        // або просто присвоюємо значення, яке не має викликати SetFullscreen знову.
+        if (engFullscreenToggle != null) engFullscreenToggle.isOn = savedFS;
+        if (ukrFullscreenToggle != null) ukrFullscreenToggle.isOn = savedFS;
+
         if (languageDisplayImage != null)
             languageDisplayImage.sprite = isUkrainian ? langLabelUkr : langLabelEng;
 
@@ -193,8 +198,13 @@ public class LanguageSpritesManager : MonoBehaviour
 
     public void SetFullscreen(bool isFullscreen)
     {
+        // Спочатку оновлюємо глобальний стан
         Screen.fullScreen = isFullscreen;
         PlayerPrefs.SetInt("IsFullscreen", isFullscreen ? 1 : 0);
         PlayerPrefs.Save();
+
+        // Синхронізуємо обидва чекбокси, щоб вони завжди були однакові
+        if (engFullscreenToggle != null) engFullscreenToggle.isOn = isFullscreen;
+        if (ukrFullscreenToggle != null) ukrFullscreenToggle.isOn = isFullscreen;
     }
 }
