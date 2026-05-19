@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Unit_Werebear
   m_EditorClassIdentifier: 
   unitName: Werebear
-  icon: {fileID: -245899350268334906, guid: ea77d19f22d61154fb0b6fbef6fd6cc6, type: 3}
-  description: 
-  prefab_Player: {fileID: 4955960284046725646, guid: 86b4566a33ec12f47bef926d47d748b1, type: 3}
-  prefab_Enemy: {fileID: 7469432876591770068, guid: b0573c5d28207d348a130861fccc2162, type: 3}
+  unitNameUk: "\u0412\u0435\u0434\u043C\u0456\u0434\u044C-\u043F\u0435\u0440\u0435\u0432\u0435\u0440\u0442\u0435\u043D\u044C"
+  iconBlue: {fileID: -245899350268334906, guid: 1745f5df6130a3d468ab8c89902ffac9, type: 3}
+  iconRed: {fileID: 1140076631477994922, guid: 852d0bcc5f3630a4bbdd800b2ed7825f, type: 3}
+  prefab_Player: {fileID: 6655511760883652015, guid: e2c1af9de87673e4fa11bf736ab05fb1, type: 3}
+  prefab_Enemy: {fileID: 138569126600662159, guid: 02888d2c885f10c4f97a31be24a2e7cf, type: 3}
   cost: 520
   incomeBonus: 75
   supplyCost: 6
   hp: 2200
   damage: 70
   moveSpeed: 1.4
-  attackRange: 2
-  visionRange: 5
+  attackRange: 1.8
+  visionRange: 7
   attackSpeed: 2.2

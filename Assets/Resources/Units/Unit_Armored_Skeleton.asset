@@ -13,16 +13,18 @@ MonoBehaviour:
   m_Name: Unit_Armored_Skeleton
   m_EditorClassIdentifier: 
   unitName: Armored Skeleton
-  icon: {fileID: -797746504705623250, guid: e092ef4f36ea5a74da49a48006f9fc47, type: 3}
-  description: 
-  prefab_Player: {fileID: 483424562989479873, guid: 863824f3c4a702d4aadf64b81330d664, type: 3}
-  prefab_Enemy: {fileID: 3049700185533956117, guid: abcba2d2ea5aa614ca6912bfb79b7ba0, type: 3}
+  unitNameUk: "\u0411\u0440\u043E\u043D\u044C\u043E\u0432\u0430\u043D\u0438\u0439
+    \u0441\u043A\u0435\u043B\u0435\u0442"
+  iconBlue: {fileID: -8590830373993655061, guid: 0263ffe28c0e16f4396ccbdc2104bb85, type: 3}
+  iconRed: {fileID: -2595130318844797397, guid: d1f1fee187155544993cf7c71b95af57, type: 3}
+  prefab_Player: {fileID: 3990409549416347393, guid: f0ea871e579d48e4798b5be6a692881c, type: 3}
+  prefab_Enemy: {fileID: 3054680050723644963, guid: d4256bfeccb526b47b4d6a77133e9944, type: 3}
   cost: 50
   incomeBonus: 5
   supplyCost: 1
-  hp: 160
+  hp: 1000
   damage: 18
   moveSpeed: 1.6
-  attackRange: 2
-  visionRange: 5
+  attackRange: 2.4
+  visionRange: 7
   attackSpeed: 1.8

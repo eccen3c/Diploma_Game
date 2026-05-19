@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Unit_Knight_Templar
   m_EditorClassIdentifier: 
   unitName: Knight Templar
-  icon: {fileID: -7257597865530431613, guid: ddff4ba8ef85ba24b98b7ba290f84913, type: 3}
-  description: 
-  prefab_Player: {fileID: 1093576549129457527, guid: ff756454c73221d41b0e1be119f35dd3, type: 3}
-  prefab_Enemy: {fileID: 3399979192439458111, guid: 20e6b6be754e2c44b85a877668eeb440, type: 3}
+  unitNameUk: "\u041B\u0438\u0446\u0430\u0440-\u0442\u0430\u043C\u043F\u043B\u0456\u0454\u0440"
+  iconBlue: {fileID: 7065882219548267679, guid: 85b04dcc55417a842a30ca9b35cdf7e0, type: 3}
+  iconRed: {fileID: -7257597865530431613, guid: ccbdcddc35deb77458a64a8d1fc5a17c, type: 3}
+  prefab_Player: {fileID: 696932754442177548, guid: d598a884457d5b24fb680357c5fc63b6, type: 3}
+  prefab_Enemy: {fileID: 2947756464562845977, guid: 1a6fe0bfce864734b9fabfcf1951062b, type: 3}
   cost: 480
   incomeBonus: 65
   supplyCost: 5
   hp: 1500
   damage: 65
   moveSpeed: 1.6
-  attackRange: 1.3
-  visionRange: 5
+  attackRange: 1.8
+  visionRange: 7
   attackSpeed: 1.8

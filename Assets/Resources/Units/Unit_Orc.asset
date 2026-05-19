@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Unit_Orc
   m_EditorClassIdentifier: 
   unitName: Orc
-  icon: {fileID: -8585750991855076914, guid: 926c8f6dee62c2240a56b9eca3042539, type: 3}
-  description: 
-  prefab_Player: {fileID: 3046192126550933225, guid: bc87af233b6e432408129dcdbcb2477b, type: 3}
-  prefab_Enemy: {fileID: 6493924088115752458, guid: b8a84099978451c43a0a7e47a063effe, type: 3}
+  unitNameUk: "\u041E\u0440\u043A"
+  iconBlue: {fileID: -8585750991855076914, guid: c2e41034ca44a0f4ca97f4608db4bf7c, type: 3}
+  iconRed: {fileID: 467494364844506841, guid: 2a4417bd13f6cc047a4553652f6d8625, type: 3}
+  prefab_Player: {fileID: 8366511973878476160, guid: 2591406192f80fb48a54213a8f10e0ea, type: 3}
+  prefab_Enemy: {fileID: 7863528547302934792, guid: b17038951777561408032fcab3123257, type: 3}
   cost: 90
   incomeBonus: 7
   supplyCost: 1
   hp: 300
   damage: 30
   moveSpeed: 1.9
-  attackRange: 1.3
-  visionRange: 5
+  attackRange: 1.5
+  visionRange: 7
   attackSpeed: 1.6

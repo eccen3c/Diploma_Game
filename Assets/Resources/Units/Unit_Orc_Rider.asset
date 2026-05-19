@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Unit_Orc_Rider
   m_EditorClassIdentifier: 
   unitName: Orc Rider
-  icon: {fileID: -8093549492249020654, guid: 84738d3fcace6b247910f0f9a1c603a3, type: 3}
-  description: 
-  prefab_Player: {fileID: 8493904586213830810, guid: 1e5ee97dd5218f84d990d2be255781e6, type: 3}
-  prefab_Enemy: {fileID: 293245210528726271, guid: cbb8ff9a7e8d17e438aa1d4eac7da77b, type: 3}
+  unitNameUk: "\u0412\u0435\u0440\u0448\u043D\u0438\u043A-\u043E\u0440\u043A"
+  iconBlue: {fileID: -8093549492249020654, guid: c6165f1102179a744b0b8359b1f82bdb, type: 3}
+  iconRed: {fileID: -4845185069326342930, guid: 570a599a4d388df46bb81f7f53b43302, type: 3}
+  prefab_Player: {fileID: 4912243758810206448, guid: 9ce066d69ffe4d34a99ece6bc1deba68, type: 3}
+  prefab_Enemy: {fileID: 3994876017843931131, guid: a60245f51c678294baf1b13650c719bb, type: 3}
   cost: 500
   incomeBonus: 75
   supplyCost: 5
   hp: 1200
   damage: 75
-  moveSpeed: 5
-  attackRange: 1.5
-  visionRange: 6
+  moveSpeed: 4
+  attackRange: 3
+  visionRange: 7
   attackSpeed: 1.5

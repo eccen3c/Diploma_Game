@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Unit_Werewolf
   m_EditorClassIdentifier: 
   unitName: Werewolf
-  icon: {fileID: 3241731569213813822, guid: a9f86e9ad8555674ea9b7a361038f08e, type: 3}
+  unitNameUk: "\u0412\u043E\u0432\u043A\u0443\u043B\u0430\u043A\u0430"
+  iconBlue: {fileID: 3241731569213813822, guid: d1ad813046b61f84fa591a24b7bff524, type: 3}
+  iconRed: {fileID: -1547214823253763254, guid: 66d87288a2ef052438996dc897d76fdc, type: 3}
   description: 
-  prefab_Player: {fileID: 5340931821862234733, guid: 11ef338d86652c242bee0b5138643f28, type: 3}
-  prefab_Enemy: {fileID: 5479680869238350606, guid: 0c0612c9c50b18042b6a28a93ad1aaf1, type: 3}
+  prefab_Player: {fileID: 3926858311252257277, guid: c79db8b56a050844dbebd18ba4cdd6d4, type: 3}
+  prefab_Enemy: {fileID: 2477465306107601373, guid: 6c29f4d35a5857d4faed96c776120f2c, type: 3}
   cost: 260
   incomeBonus: 40
   supplyCost: 3

@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Unit_Lancer
   m_EditorClassIdentifier: 
   unitName: Lancer
-  icon: {fileID: -146130800703536882, guid: cb9830bff917efb4baa3b8a622f36c9f, type: 3}
-  description: 
-  prefab_Player: {fileID: 1055897878636807854, guid: 9530ce1cf44ad22479c14ac15aac5d95, type: 3}
-  prefab_Enemy: {fileID: 6192124225902428446, guid: 66c3d156fd84f2b4aa3282e34e8a86dc, type: 3}
+  unitNameUk: "\u041B\u0430\u043D\u0446\u0435\u0440"
+  iconBlue: {fileID: 7155992800593461173, guid: 4cd09449e6ac93d4db8d0e8cf60c056c, type: 3}
+  iconRed: {fileID: -146130800703536882, guid: c0a801675b31c584a99ba90897999016, type: 3}
+  prefab_Player: {fileID: 8421401053635167036, guid: 249a525e1d5fab14f9c1ad7976318f61, type: 3}
+  prefab_Enemy: {fileID: 5531402620836414519, guid: 68f5d8ca7a57fb04d8497e146f491d47, type: 3}
   cost: 950
   incomeBonus: 150
   supplyCost: 8
   hp: 3400
   damage: 95
   moveSpeed: 4.3
-  attackRange: 1.9
+  attackRange: 3
   visionRange: 8
   attackSpeed: 1.8
