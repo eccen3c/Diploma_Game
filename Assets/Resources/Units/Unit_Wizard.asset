@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Unit_Wizard
   m_EditorClassIdentifier: 
   unitName: Wizard
-  icon: {fileID: 6536702919712791088, guid: ff441ec104d51a44d84ea2bc66a9873a, type: 3}
+  unitNameUk: "\u0427\u0430\u0440\u0456\u0432\u043D\u0438\u043A"
+  iconBlue: {fileID: 6536702919712791088, guid: 82aa371c5d7113a458413f45e18789e0, type: 3}
+  iconRed: {fileID: -7380512178116347138, guid: ebaefe0a4b0609b4c903d86e6df9cf19, type: 3}
   description: 
-  prefab_Player: {fileID: 363165626712950911, guid: 862e3a1b1248cbf4c9a2debaed4c6efb, type: 3}
-  prefab_Enemy: {fileID: 166952372482467090, guid: 10d51245a1d4a8c4c85339fa0b449cb9, type: 3}
+  prefab_Player: {fileID: 921956829809289002, guid: 7e125d0c4e9aef547a11a3808d24cd34, type: 3}
+  prefab_Enemy: {fileID: 6233401420656322138, guid: 72b2a8b5c72dbf2479bc0d82320fe139, type: 3}
   cost: 210
   incomeBonus: 22
   supplyCost: 3

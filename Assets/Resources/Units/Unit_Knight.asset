@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Unit_Knight
   m_EditorClassIdentifier: 
   unitName: Knight
-  icon: {fileID: -2871633289480588777, guid: 715eaf237d90dd5439c003d06fe8fc5a, type: 3}
-  description: 
-  prefab_Player: {fileID: 6512502110893993046, guid: b19e9c7885fb9ba418ba71c1a5f0d2de, type: 3}
-  prefab_Enemy: {fileID: 1682142063968335548, guid: d8c304b7c0210e0478a74e6ae4f9199a, type: 3}
+  unitNameUk: "\u041B\u0438\u0446\u0430\u0440"
+  iconBlue: {fileID: -3835892549377375693, guid: 48b6b2423eb69124992a5680372a00d3, type: 3}
+  iconRed: {fileID: -2871633289480588777, guid: c8797c59ac3c80c43976a19876476ab0, type: 3}
+  prefab_Player: {fileID: 1777203539813387045, guid: 0aed6553d36179948a747eac8f462445, type: 3}
+  prefab_Enemy: {fileID: 1990136092893670586, guid: 4029e5fe40eb4dc429e1f91cab9591ef, type: 3}
   cost: 150
   incomeBonus: 10
   supplyCost: 2
   hp: 550
   damage: 36
   moveSpeed: 2.1
-  attackRange: 1.3
-  visionRange: 5
+  attackRange: 1.6
+  visionRange: 7
   attackSpeed: 1.4

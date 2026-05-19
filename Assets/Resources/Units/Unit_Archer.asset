@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Unit_Archer
   m_EditorClassIdentifier: 
   unitName: Archer
-  icon: {fileID: 3645612869091388295, guid: 2260714efa557634292d4d9badea62ab, type: 3}
+  unitNameUk: "\u041B\u0443\u0447\u043D\u0438\u043A"
+  iconBlue: {fileID: 3645612869091388295, guid: 5e27722dc6d35d04fb6ec09355918c59, type: 3}
+  iconRed: {fileID: 8116925086568609498, guid: ea9236b345b0a604aa23d26b3d012e1e, type: 3}
   description: 
-  prefab_Player: {fileID: 6839755735771934067, guid: eb48a04c99f9b5e46973041f53ecb42c, type: 3}
-  prefab_Enemy: {fileID: 1817101277007986732, guid: 807cc1cea43a0374d8012a5c415fdbbe, type: 3}
+  prefab_Player: {fileID: 5679102273522577337, guid: 0dd5714b46b38c74f932bcc06e90ad0e, type: 3}
+  prefab_Enemy: {fileID: 6377553135689916504, guid: c3d49c8f70a8c9043878157a10a0a88f, type: 3}
   cost: 120
   incomeBonus: 12
   supplyCost: 2

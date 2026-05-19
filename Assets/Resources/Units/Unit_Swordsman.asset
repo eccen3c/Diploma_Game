@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Unit_Swordsman
   m_EditorClassIdentifier: 
   unitName: Swordsman
-  icon: {fileID: 1938492291639344120, guid: 1deb36d317ce1c14d94e5d866a1e0a14, type: 3}
-  description: 
-  prefab_Player: {fileID: 3981397163031288763, guid: cef34712af4ff3e4ea1ecdcbdf59fea4, type: 3}
-  prefab_Enemy: {fileID: 5850177329154209071, guid: bd417e662b6b69e4396a7bd9f3865ab7, type: 3}
+  unitNameUk: "\u041C\u0435\u0447\u043D\u0438\u043A"
+  iconBlue: {fileID: 1938492291639344120, guid: 39dd72ed48398a8488881b771085cd1a, type: 3}
+  iconRed: {fileID: -4279168011522557362, guid: 89c45693c28832b45aee1c65e9a84d83, type: 3}
+  prefab_Player: {fileID: 237716324404260136, guid: d704b29c84ca13844a0b0857c97e074b, type: 3}
+  prefab_Enemy: {fileID: 4403131201583945213, guid: 734b3290d977c2a42ba27d344a96bb3c, type: 3}
   cost: 160
   incomeBonus: 20
   supplyCost: 2
   hp: 320
   damage: 42
-  moveSpeed: 3.2
-  attackRange: 1.3
-  visionRange: 5
+  moveSpeed: 2.2
+  attackRange: 1.5
+  visionRange: 7
   attackSpeed: 1.2

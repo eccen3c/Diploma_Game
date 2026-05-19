@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: Unit_Armored_Axeman
   m_EditorClassIdentifier: 
   unitName: Armored Axeman
-  icon: {fileID: -8730611281745357216, guid: d06095e6a616044429eb7449c7cad798, type: 3}
+  unitNameUk: "\u0411\u0440\u043E\u043D\u044C\u043E\u0432\u0430\u043D\u0438\u0439
+    \u0441\u043E\u043A\u0438\u0440\u043D\u0438\u043A"
+  iconBlue: {fileID: -8730611281745357216, guid: 4a2468dccf655b747af1fe243ba4316d, type: 3}
+  iconRed: {fileID: -5320801428638268430, guid: 9deca019dc32b2e4887d51fe3b0a626b, type: 3}
   description: 
-  prefab_Player: {fileID: 5651491385240479305, guid: c24c6f30f24bf5a4baaf48ad872010d4, type: 3}
-  prefab_Enemy: {fileID: 3636077955988838700, guid: 9aba0e9f68d1ff744ad41844eafbe76d, type: 3}
+  prefab_Player: {fileID: 635963782672232216, guid: 07d98bca596163542b1c6f55bfa61f62, type: 3}
+  prefab_Enemy: {fileID: 5527991026368555875, guid: c6904d121c6a8dd4e930d716e3e2fbbd, type: 3}
   cost: 380
   incomeBonus: 45
   supplyCost: 4

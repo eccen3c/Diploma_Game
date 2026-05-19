@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Unit_Skeleton_Archer
   m_EditorClassIdentifier: 
   unitName: Skeleton Archer
-  icon: {fileID: 4397577149643667455, guid: 0327ef82fb4aa3741928502980c54e78, type: 3}
+  unitNameUk: "\u0421\u043A\u0435\u043B\u0435\u0442 \u043B\u0443\u0447\u043D\u0438\u043A"
+  iconBlue: {fileID: 4397577149643667455, guid: 807313d36e08f4643b612c86ff3bbf04, type: 3}
+  iconRed: {fileID: -5358192836918275731, guid: 8389537a6e2d5634ba089829a612380c, type: 3}
   description: 
-  prefab_Player: {fileID: 4079855333343021769, guid: cc927657579df0148874e75354f10d36, type: 3}
-  prefab_Enemy: {fileID: 6500140973941939640, guid: 6d54a6cdbbefce74b8e0def73c26519d, type: 3}
+  prefab_Player: {fileID: 6929361916187195108, guid: 885454104c8608f43aa56766707bbe46, type: 3}
+  prefab_Enemy: {fileID: 1862852631413188455, guid: b92f75a6a2f0b2d48bf93855bf4b8cba, type: 3}
   cost: 130
   incomeBonus: 5
   supplyCost: 1
