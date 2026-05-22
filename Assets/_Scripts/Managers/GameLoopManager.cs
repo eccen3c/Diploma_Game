@@ -12,6 +12,7 @@ public class GameLoopManager : MonoBehaviour
 
     private float currentTimer;
     private bool isWarmup = true;
+    private bool isFirstRound = true;
 
     [Header("����� ������")]
     public float spawnInterval = 0.2f;
@@ -39,6 +40,9 @@ public class GameLoopManager : MonoBehaviour
     public ShopManager shopManager;
 
     void Awake() { instance = this; }
+
+    public float GetCurrentTimer() => currentTimer;
+    public bool GetIsWarmup() => isWarmup;
 
     void Start()
     {
@@ -102,8 +106,12 @@ public class GameLoopManager : MonoBehaviour
     void StartNewRound()
     {
         currentTimer = roundDuration;
-        p1_Gold += p1_Income;
-        p2_Gold += p2_Income;
+        if (!isFirstRound)
+        {
+            p1_Gold += p1_Income;
+            p2_Gold += p2_Income;
+        }
+        isFirstRound = false;
         p1_Supply = 60;
         p2_Supply = 60;
         UpdateUI();

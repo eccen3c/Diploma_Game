@@ -32,20 +32,36 @@ public class ShopInput : MonoBehaviour
         if (Time.timeScale == 0) return;
         maxIndex = shopManager.allUnits.Count - 1;
 
+        bool isBotControlled = playerID == PlayerID.Player2 && GameSession.mode == GameMode.SoloVsBot;
+
         // 2. ������ ����������
-        if (playerID == PlayerID.Player1)
+        if (!isBotControlled)
         {
-            if (Input.GetKeyDown(KeyCode.D)) MoveSelection(1);       // ������
-            if (Input.GetKeyDown(KeyCode.A)) MoveSelection(-1);      // �����
-            if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-8);      // ����� (��� -8)
-            if (Input.GetKeyDown(KeyCode.S)) MoveSelection(8);       // ���� (��� +8)
-        }
-        else // Player 2
-        {
-            if (Input.GetKeyDown(KeyCode.RightArrow)) MoveSelection(1);
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveSelection(-1);
-            if (Input.GetKeyDown(KeyCode.UpArrow)) MoveSelection(-8);
-            if (Input.GetKeyDown(KeyCode.DownArrow)) MoveSelection(8);
+            bool isP1 = playerID == PlayerID.Player1;
+            bool soloMode = GameSession.mode == GameMode.SoloVsBot;
+
+            if (isP1)
+            {
+                if (Input.GetKeyDown(KeyCode.D)) MoveSelection(1);
+                if (Input.GetKeyDown(KeyCode.A)) MoveSelection(-1);
+                if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-8);
+                if (Input.GetKeyDown(KeyCode.S)) MoveSelection(8);
+
+                if (soloMode)
+                {
+                    if (Input.GetKeyDown(KeyCode.RightArrow)) MoveSelection(1);
+                    if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveSelection(-1);
+                    if (Input.GetKeyDown(KeyCode.UpArrow)) MoveSelection(-8);
+                    if (Input.GetKeyDown(KeyCode.DownArrow)) MoveSelection(8);
+                }
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.RightArrow)) MoveSelection(1);
+                if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveSelection(-1);
+                if (Input.GetKeyDown(KeyCode.UpArrow)) MoveSelection(-8);
+                if (Input.GetKeyDown(KeyCode.DownArrow)) MoveSelection(8);
+            }
         }
 
         // 3. ��������� ������ (�������� �����)

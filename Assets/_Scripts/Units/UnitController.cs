@@ -35,9 +35,11 @@ public class UnitController : MonoBehaviour
     private string myTag;
     private string enemyTag;
 
-    // ���� ����� �������� GameLoopManager ��� ������
+    [HideInInspector] public UnitData unitData;
+
     public void SetupUnit(UnitData data)
     {
+        unitData = data;
         hp = data.hp;
         damage = data.damage;
         speed = data.moveSpeed;

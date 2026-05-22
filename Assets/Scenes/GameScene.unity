@@ -480,6 +480,51 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fac5a5d314afc0f4f92a68e49531bf21, type: 3}
+--- !u!1 &84050692
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 84050694}
+  - component: {fileID: 84050693}
+  m_Layer: 0
+  m_Name: BotController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &84050693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 84050692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d7c52ea39bb9884daccfe6686d867d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shopInputP2: {fileID: 1589008729}
+--- !u!4 &84050694
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 84050692}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1163.381, y: 310.12598, z: -8.118007}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &94709319 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1469546166222682288, guid: 27f5691067181e447855e946589bfcc1, type: 3}
@@ -144459,8 +144504,8 @@ MonoBehaviour:
   allUnits:
   - {fileID: 11400000, guid: 5f6ea7638e8276a48bd8e9c3e234f7cb, type: 2}
   - {fileID: 11400000, guid: b0a9a3df1dbc69641a152e37fa9223ef, type: 2}
-  - {fileID: 11400000, guid: 867484858fa90564fa6eb16dbbadfa9f, type: 2}
   - {fileID: 11400000, guid: eec47c77ce58e3a4e90e2711e883fe96, type: 2}
+  - {fileID: 11400000, guid: 867484858fa90564fa6eb16dbbadfa9f, type: 2}
   - {fileID: 11400000, guid: 5be6887d0d23ac44483da98a51d67331, type: 2}
   - {fileID: 11400000, guid: 9f36e995a4d67f7499479062ffc39ad2, type: 2}
   - {fileID: 11400000, guid: 8c7480bba23c98b40b7e1f41f72ef29d, type: 2}
@@ -144489,13 +144534,13 @@ MonoBehaviour:
   roundDuration: 30
   spawnWindowDuration: 8
   spawnInterval: 0.2
-  p1_Gold: 520
-  p1_Income: 0
+  p1_Gold: 300
+  p1_Income: 250
   p1_Supply: 60
   p1_SpawnPoint: {fileID: 1886501382}
   p1_UI_Stats: {fileID: 1822404353}
-  p2_Gold: 520
-  p2_Income: 0
+  p2_Gold: 300
+  p2_Income: 250
   p2_Supply: 60
   p2_SpawnPoint: {fileID: 943125698}
   p2_UI_Stats: {fileID: 2050036327}
@@ -147261,3 +147306,4 @@ SceneRoots:
   - {fileID: 1523992886}
   - {fileID: 985068313}
   - {fileID: 680180418}
+  - {fileID: 84050694}

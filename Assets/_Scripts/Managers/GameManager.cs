@@ -30,6 +30,9 @@ public class GameManager : MonoBehaviour
                          || (howToPlayPanel != null && howToPlayPanel.activeSelf);
         if (Input.GetKeyDown(KeyCode.Escape) && !isGameOver && !anyPanelOpen)
             TogglePause();
+
+        if (Input.GetKeyDown(KeyCode.Space) && !isGameOver)
+            DebugCrippleRandomBase();
     }
 
     void Start()
@@ -133,6 +136,13 @@ public class GameManager : MonoBehaviour
                 resultText.color = new Color(0.2f, 0.5f, 1f);
             }
         }
+    }
+
+    void DebugCrippleRandomBase()
+    {
+        BaseController[] bases = FindObjectsOfType<BaseController>();
+        if (bases.Length == 0) return;
+        bases[Random.Range(0, bases.Length)].SetToOneHp();
     }
 
     private IEnumerator UpdateLanguageNextFrame()

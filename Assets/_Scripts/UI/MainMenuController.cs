@@ -41,6 +41,28 @@ public class MainMenuController : MonoBehaviour
 
     public void PlayGame()
     {
+        GameSession.mode = GameMode.LocalMulti;
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void PlaySolo_Easy()
+    {
+        GameSession.mode = GameMode.SoloVsBot;
+        GameSession.difficulty = BotDifficulty.Easy;
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void PlaySolo_Medium()
+    {
+        GameSession.mode = GameMode.SoloVsBot;
+        GameSession.difficulty = BotDifficulty.Medium;
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void PlaySolo_Hard()
+    {
+        GameSession.mode = GameMode.SoloVsBot;
+        GameSession.difficulty = BotDifficulty.Hard;
         SceneManager.LoadScene("GameScene");
     }
 
