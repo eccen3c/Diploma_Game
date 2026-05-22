@@ -34,8 +34,11 @@ public class TestUnitAI : MonoBehaviour
     private float avoidResetTimer = 0f;
     private const float AVOID_HOLD_TIME = 1f;
 
+    [HideInInspector] public UnitData unitData;
+
     public void SetupUnit(UnitData data)
     {
+        unitData = data;
         hp = data.hp;
         damage = data.damage;
         speed = data.moveSpeed;

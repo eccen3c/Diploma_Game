@@ -45,12 +45,6 @@ public class BaseController : MonoBehaviour
 
     void Update()
     {
-        // ���� ����� �� Space
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TakeDamage(500);
-        }
-
         if (Time.time >= nextFireTime)
         {
             GameObject target = FindClosestEnemy();
@@ -60,6 +54,12 @@ public class BaseController : MonoBehaviour
                 nextFireTime = Time.time + fireRate;
             }
         }
+    }
+
+    public void SetToOneHp()
+    {
+        currentHealth = 1;
+        UpdateUI();
     }
 
     public void TakeDamage(int damage)

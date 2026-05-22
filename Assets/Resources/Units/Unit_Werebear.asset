@@ -18,7 +18,7 @@ MonoBehaviour:
   iconRed: {fileID: 1140076631477994922, guid: 852d0bcc5f3630a4bbdd800b2ed7825f, type: 3}
   prefab_Player: {fileID: 6655511760883652015, guid: e2c1af9de87673e4fa11bf736ab05fb1, type: 3}
   prefab_Enemy: {fileID: 138569126600662159, guid: 02888d2c885f10c4f97a31be24a2e7cf, type: 3}
-  cost: 520
+  cost: 750
   incomeBonus: 75
   supplyCost: 6
   hp: 2200
