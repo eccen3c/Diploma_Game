@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.Collections;
+// Додаємо Photon
+using Photon.Pun;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks // Змінили для підтримки Photon
 {
     public static GameManager instance;
 
@@ -16,7 +19,6 @@ public class GameManager : MonoBehaviour
     public GameObject howToPlayPanel;
     public TextMeshProUGUI resultText;
 
-
     public bool isPaused = false;
 
     void Awake()
@@ -28,20 +30,18 @@ public class GameManager : MonoBehaviour
     {
         bool anyPanelOpen = (settingsPanel != null && settingsPanel.activeSelf)
                          || (howToPlayPanel != null && howToPlayPanel.activeSelf);
+
         if (Input.GetKeyDown(KeyCode.Escape) && !isGameOver && !anyPanelOpen)
             TogglePause();
     }
 
     void Start()
     {
-        // 1. ������� �����
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(false);
         if (settingsPanel != null) settingsPanel.SetActive(false);
         if (howToPlayPanel != null) howToPlayPanel.SetActive(false);
 
-        // 2. ��������� �����ު�� ���� ��� ����Ҳ �����
-        // �� ����� PlayerPrefs �� �� ����, �� �� �������� �����
         Invoke("ApplyInitialLanguage", 0.05f);
 
         Time.timeScale = 1;
@@ -54,12 +54,22 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause()
     {
+        // В онлайні ставити гру на паузу (зупиняти час) не можна, бо мережа відвалиться.
+        // Тому просто показуємо панель паузи індивідуально для кожного гравця.
+        if (PhotonNetwork.IsConnected)
+        {
+            isPaused = !isPaused;
+            if (pausePanel) pausePanel.SetActive(isPaused);
+            if (isPaused) StartCoroutine(UpdateLanguageNextFrame());
+            return;
+        }
+
+        // СТАРИЙ ЛОКАЛЬНИЙ РЕЖИМ (Працює як раніше з Time.timeScale)
         isPaused = !isPaused;
 
         if (isPaused)
         {
             if (pausePanel) pausePanel.SetActive(true);
-            // ���������, ��� ������� ���� �� ����
             StartCoroutine(UpdateLanguageNextFrame());
             Time.timeScale = 0;
         }
@@ -85,35 +95,71 @@ public class GameManager : MonoBehaviour
     public void OpenHowToPlay()
     {
         if (howToPlayPanel) howToPlayPanel.SetActive(true);
-        Time.timeScale = 0;
+        if (!PhotonNetwork.IsConnected) Time.timeScale = 0; // Зупиняємо час тільки в локалці
     }
 
     public void CloseHowToPlay()
     {
         if (howToPlayPanel) howToPlayPanel.SetActive(false);
-        Time.timeScale = SpeedController.instance != null ? SpeedController.instance.GetCurrentSpeed() : 1f;
+        if (!PhotonNetwork.IsConnected)
+            Time.timeScale = SpeedController.instance != null ? SpeedController.instance.GetCurrentSpeed() : 1f;
     }
 
     public void GoToMainMenu()
     {
         Time.timeScale = 1;
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.LeaveRoom(); // Правильно виходимо з кімнати Photon
+        }
         SceneManager.LoadScene("MainMenu");
     }
 
+    // Перезапуск гри тепер працює для обох гравців в онлайні
     public void RestartGame()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.IsMasterClient) // Тільки Хост має право перезавантажити сцену
+            {
+                PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().name);
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
+    // Мережевий GameOver. Коли викликається, Фотон синхронізує фінал на обох комп'ютерах.
     public void GameOver(string loserTag)
     {
         if (isGameOver) return;
 
+        if (PhotonNetwork.IsConnected)
+        {
+            // Викликаємо RPC функцію на всіх ПК в кімнаті
+            photonView.RPC("RPC_GameOver", RpcTarget.All, loserTag);
+        }
+        else
+        {
+            LocalGameOver(loserTag);
+        }
+    }
+
+    [PunRPC]
+    void RPC_GameOver(string loserTag)
+    {
+        LocalGameOver(loserTag);
+    }
+
+    // Твоя оригінальна логіка GameOver
+    private void LocalGameOver(string loserTag)
+    {
         isGameOver = true;
         if (gameOverPanel) gameOverPanel.SetActive(true);
 
-        // ���������, �� ������ ������� ����������� ��� ��������
         StartCoroutine(UpdateLanguageNextFrame());
 
         Time.timeScale = 0;

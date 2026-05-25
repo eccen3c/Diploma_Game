@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
-public class BaseController : MonoBehaviour
+public class BaseController : MonoBehaviourPun
 {
     [Header("Base Stats")]
     public int maxHealth = 9000;
@@ -10,18 +11,15 @@ public class BaseController : MonoBehaviour
     public bool isPlayerBase;
 
     [Header("UI Elements")]
-    public TextMeshPro textHP;       // ����� ��� ���������
-    public Image hpFillImage;        // ������ ������� (����)
-    public Image hpBottomImage;      // ����� ������� (��������)
-    public Image hpFrameImage;       // ��'��� ����� (HP_Frame)
-    public Image heartImage;         // ��'��� ��������
+    public TextMeshPro textHP;
+    public Image hpFillImage;
+    public Image hpBottomImage;
+    public Image hpFrameImage;
+    public Image heartImage;
 
     [Header("Sprites (Assign in Inspector)")]
-    // 0-������, 1-�����, 2-�������, 3-ѳ��
     public Sprite[] hpFillSprites;
-    // 0-������, 1-�����, 2-�������
     public Sprite[] hpFrameSprites;
-    // 0-�����, 1-��������, 2-�����
     public Sprite[] heartSprites;
 
     [Header("Aiming System")]
@@ -39,30 +37,74 @@ public class BaseController : MonoBehaviour
         currentHealth = maxHealth;
         UpdateUI();
 
-        if (isPlayerBase) enemyTag = "Enemy";
-        else enemyTag = "Player";
+        // Перевіряємо саме знаходження в кімнаті (Room)
+        if (PhotonNetwork.InRoom)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                enemyTag = isPlayerBase ? "Enemy" : "Player";
+            }
+            else
+            {
+                enemyTag = isPlayerBase ? "Player" : "Enemy";
+            }
+        }
+        else
+        {
+            // Офлайн режим: Гравець 1 (лівий) б'є Enemy, Гравець 2 (правий) б'є Player
+            if (isPlayerBase) enemyTag = "Enemy";
+            else enemyTag = "Player";
+        }
     }
 
     void Update()
     {
-        // ���� ����� �� Space
         if (Input.GetKeyDown(KeyCode.Space))
         {
             TakeDamage(500);
         }
+
+        // Якщо ми в кімнаті і ця база не наша — її Update не керує стрільбою
+        if (PhotonNetwork.InRoom && !photonView.IsMine) return;
 
         if (Time.time >= nextFireTime)
         {
             GameObject target = FindClosestEnemy();
             if (target != null)
             {
-                Shoot(target);
+                if (PhotonNetwork.InRoom)
+                {
+                    // ОНЛАЙН: Стріляємо через RPC, тільки якщо є кімната
+                    PhotonView targetView = target.GetComponent<PhotonView>();
+                    if (targetView != null)
+                    {
+                        photonView.RPC("RPC_Shoot", RpcTarget.All, targetView.ViewID);
+                    }
+                }
+                else
+                {
+                    // ЛОКАЛЬНО: Стріляємо напряму, Photon не чіпаємо
+                    LocalShoot(target);
+                }
+
                 nextFireTime = Time.time + fireRate;
             }
         }
     }
 
     public void TakeDamage(int damage)
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+        }
+        else
+        {
+            LocalDamage(damage);
+        }
+    }
+
+    private void LocalDamage(int damage)
     {
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
@@ -71,23 +113,52 @@ public class BaseController : MonoBehaviour
         if (currentHealth <= 0) Die();
     }
 
+    private void LocalShoot(GameObject target)
+    {
+        if (target == null || projectilePrefab == null) return;
+
+        AudioManager.Instance?.PlayFireball();
+        Vector3 spawnPos = (aimPoint != null) ? aimPoint.position : transform.position;
+        GameObject projObj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
+        ProjectileController projScript = projObj.GetComponent<ProjectileController>();
+        if (projScript == null) return;
+
+        Vector3 offset = Vector3.zero;
+        if (target.GetComponent<TestUnitAI>() != null || target.GetComponent<TestArcherAI>() != null)
+            offset = new Vector3(0, 0.5f, 0);
+
+        projScript.SetTarget(target.transform, gameObject.tag, offset);
+    }
+
+    [PunRPC]
+    void RPC_TakeDamage(int damage)
+    {
+        LocalDamage(damage);
+    }
+
+    [PunRPC]
+    void RPC_Shoot(int targetViewID)
+    {
+        PhotonView targetView = PhotonView.Find(targetViewID);
+        if (targetView == null) return;
+
+        LocalShoot(targetView.gameObject);
+    }
+
     void UpdateUI()
     {
         if (textHP != null) textHP.text = currentHealth.ToString();
 
         if (hpFillImage != null && hpFillSprites.Length >= 4)
         {
-            // 1. ����²��� �� ������ (0 ��)
             if (currentHealth <= 0)
             {
-                // ������� fillAmount � 0, ���� ���� (3), ��� ����� (3) � ����� ����� (3)
                 SetUI(0f, 3, 3, 3);
-                return; // �������� � ������, ��� �������� �� �����
+                return;
             }
 
             float ratio = (float)currentHealth / maxHealth;
 
-            // 2. �������� ����� �����
             if (ratio > 0.66f)
             {
                 float stageFill = (ratio - 0.66f) / 0.34f;
@@ -101,14 +172,13 @@ public class BaseController : MonoBehaviour
             else
             {
                 float stageFill = ratio / 0.33f;
-                // ���� �� ����� 0, ��� ����� 33% � �������� �������
                 SetUI(stageFill, 2, 3, 2);
             }
         }
     }
+
     void SetUI(float fill, int topIdx, int bottomIdx, int heartIdx)
     {
-        // ������������ �������
         hpFillImage.fillAmount = fill;
         hpFillImage.sprite = hpFillSprites[topIdx];
 
@@ -118,20 +188,17 @@ public class BaseController : MonoBehaviour
             hpBottomImage.fillAmount = 1f;
         }
 
-        // ������������ ����� (���� ���� ������� ���䳿)
         if (hpFrameImage != null && hpFrameSprites.Length > topIdx)
         {
             hpFrameImage.sprite = hpFrameSprites[topIdx];
         }
 
-        // ������������ �����
         if (heartImage != null && heartSprites.Length > heartIdx)
         {
             heartImage.sprite = heartSprites[heartIdx];
         }
     }
 
-    // --- ��ò�� ��в���� ---
     GameObject FindClosestEnemy()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
@@ -154,22 +221,6 @@ public class BaseController : MonoBehaviour
             }
         }
         return closest;
-    }
-
-    void Shoot(GameObject target)
-    {
-        if (projectilePrefab == null) return;
-        AudioManager.Instance?.PlayFireball();
-        Vector3 spawnPos = (aimPoint != null) ? aimPoint.position : transform.position;
-        GameObject projObj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
-        ProjectileController projScript = projObj.GetComponent<ProjectileController>();
-        if (projScript == null) return;
-
-        Vector3 offset = Vector3.zero;
-        if (target.GetComponent<TestUnitAI>() != null || target.GetComponent<TestArcherAI>() != null)
-            offset = new Vector3(0, 0.5f, 0);
-
-        projScript.SetTarget(target.transform, gameObject.tag, offset);
     }
 
     void Die()

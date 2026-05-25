@@ -143114,6 +143114,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1589008728}
   - component: {fileID: 1589008729}
+  - component: {fileID: 1589008730}
   m_Layer: 0
   m_Name: Input_P2
   m_TagString: Untagged
@@ -143151,6 +143152,28 @@ MonoBehaviour:
   playerID: 1
   gridContainer: {fileID: 1689357310}
   selectedIndex: 0
+--- !u!114 &1589008730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589008727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 5
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1590531027
 GameObject:
   m_ObjectHideFlags: 0
@@ -144399,6 +144422,7 @@ GameObject:
   - component: {fileID: 1760679537}
   - component: {fileID: 1760679539}
   - component: {fileID: 1760679540}
+  - component: {fileID: 1760679541}
   m_Layer: 0
   m_Name: Game_Manager
   m_TagString: Untagged
@@ -144485,7 +144509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03bb931f4522358468af832e7650c90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startDelay: 5
+  startDelay: 10
   roundDuration: 30
   spawnWindowDuration: 8
   spawnInterval: 0.2
@@ -144503,6 +144527,28 @@ MonoBehaviour:
   inputP1: {fileID: 1811793572}
   inputP2: {fileID: 1589008729}
   shopManager: {fileID: 1760679539}
+--- !u!114 &1760679541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760679536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1767652911
 GameObject:
   m_ObjectHideFlags: 0
@@ -144947,6 +144993,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1811793571}
   - component: {fileID: 1811793572}
+  - component: {fileID: 1811793573}
   m_Layer: 0
   m_Name: Input_P1
   m_TagString: Untagged
@@ -144984,6 +145031,28 @@ MonoBehaviour:
   playerID: 0
   gridContainer: {fileID: 1884715568}
   selectedIndex: 0
+--- !u!114 &1811793573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811793570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 4
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &1821794603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -146849,6 +146918,10 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: -0.20197952
       objectReference: {fileID: 0}
+    - target: {fileID: 7222206787727917265, guid: d902838542c23854b83a28373fc1b70c, type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8938382003181898159, guid: d902838542c23854b83a28373fc1b70c, type: 3}
       propertyPath: maxHealth
       value: 9000
@@ -147110,6 +147183,10 @@ PrefabInstance:
     - target: {fileID: 2038579203788057609, guid: 592dd3c6a1fc690458f6de348d525a90, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2629497202707453934, guid: 592dd3c6a1fc690458f6de348d525a90, type: 3}
+      propertyPath: sceneViewId
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3251759462601612765, guid: 592dd3c6a1fc690458f6de348d525a90, type: 3}
       propertyPath: m_Name
