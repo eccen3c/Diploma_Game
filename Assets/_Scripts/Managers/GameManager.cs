@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
@@ -100,12 +101,16 @@ public class GameManager : MonoBehaviour
     public void GoToMainMenu()
     {
         Time.timeScale = 1;
+        GameSession.mode = GameMode.LocalMulti;
+        if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene("MainMenu");
     }
 
     public void RestartGame()
     {
         Time.timeScale = 1;
+        if (GameSession.mode != GameMode.OnlineMulti)
+            GameSession.mode = GameMode.LocalMulti;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

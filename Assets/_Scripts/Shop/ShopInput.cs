@@ -1,4 +1,5 @@
 using UnityEngine;
+using Photon.Pun;
 
 public class ShopInput : MonoBehaviour
 {
@@ -34,11 +35,18 @@ public class ShopInput : MonoBehaviour
 
         bool isBotControlled = playerID == PlayerID.Player2 && GameSession.mode == GameMode.SoloVsBot;
 
-        // 2. ������ ����������
+        // В онлайні MasterClient = P1, Client = P2
+        if (GameSession.mode == GameMode.OnlineMulti)
+        {
+            if (PhotonNetwork.IsMasterClient && playerID == PlayerID.Player2) return;
+            if (!PhotonNetwork.IsMasterClient && playerID == PlayerID.Player1) return;
+        }
+
         if (!isBotControlled)
         {
             bool isP1 = playerID == PlayerID.Player1;
             bool soloMode = GameSession.mode == GameMode.SoloVsBot;
+            bool isOnline = GameSession.mode == GameMode.OnlineMulti;
 
             if (isP1)
             {
@@ -47,7 +55,7 @@ public class ShopInput : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-8);
                 if (Input.GetKeyDown(KeyCode.S)) MoveSelection(8);
 
-                if (soloMode)
+                if (soloMode || isOnline)
                 {
                     if (Input.GetKeyDown(KeyCode.RightArrow)) MoveSelection(1);
                     if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveSelection(-1);
@@ -61,6 +69,14 @@ public class ShopInput : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveSelection(-1);
                 if (Input.GetKeyDown(KeyCode.UpArrow)) MoveSelection(-8);
                 if (Input.GetKeyDown(KeyCode.DownArrow)) MoveSelection(8);
+
+                if (isOnline)
+                {
+                    if (Input.GetKeyDown(KeyCode.D)) MoveSelection(1);
+                    if (Input.GetKeyDown(KeyCode.A)) MoveSelection(-1);
+                    if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-8);
+                    if (Input.GetKeyDown(KeyCode.S)) MoveSelection(8);
+                }
             }
         }
 

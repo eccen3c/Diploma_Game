@@ -1,4 +1,5 @@
 using UnityEngine;
+using Photon.Pun;
 
 public class UnitController : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class UnitController : MonoBehaviour
     private float lastAttackTime;
     private Transform currentTarget;
     private bool isDead = false;
+    private Vector3 clientPrevPos;
+    private float clientMoveTimer = 0f;
 
     // ����������
     private Animator anim;
@@ -61,11 +64,32 @@ public class UnitController : MonoBehaviour
             enemyTag = "Player";
 
         myLaneOffset = Random.Range(-1.5f, 1.5f);
+
+        if (GameSession.mode == GameMode.OnlineMulti && !PhotonNetwork.IsMasterClient)
+        {
+            if (rb) rb.simulated = false;
+            clientPrevPos = transform.position;
+        }
+    }
+
+    void UpdateClientAnim()
+    {
+        float moved = Vector3.Distance(transform.position, clientPrevPos);
+        clientPrevPos = transform.position;
+        if (moved > 0.005f) clientMoveTimer = 0.2f;
+        clientMoveTimer -= Time.deltaTime;
+        if (anim) anim.SetBool("isMoving", clientMoveTimer > 0);
     }
 
     void Update()
     {
         if (isDead) return;
+
+        if (GameSession.mode == GameMode.OnlineMulti && !PhotonNetwork.IsMasterClient)
+        {
+            UpdateClientAnim();
+            return;
+        }
 
         FindTarget();
 
@@ -219,6 +243,28 @@ public class UnitController : MonoBehaviour
     {
         if (anim) anim.SetTrigger("attack");
         lastAttackTime = Time.time;
+
+        if (GameSession.mode == GameMode.OnlineMulti && PhotonNetwork.IsMasterClient)
+        {
+            var nuid = GetComponent<NetUnitId>();
+            if (nuid != null) GameLoopManager.instance?.SyncUnitAttack(nuid.id);
+        }
+    }
+
+    public void PlayClientAttack()
+    {
+        if (anim) anim.SetTrigger("attack");
+    }
+
+    public void TriggerClientDeath()
+    {
+        if (isDead) return;
+        isDead = true;
+        Collider2D[] cols = GetComponents<Collider2D>();
+        foreach (var col in cols) col.enabled = false;
+        if (rb) rb.simulated = false;
+        if (anim) anim.SetTrigger("die");
+        Destroy(gameObject, 0.65f);
     }
 
     public void DealDamage()
@@ -286,6 +332,12 @@ public class UnitController : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
+
+        if (GameSession.mode == GameMode.OnlineMulti && PhotonNetwork.IsMasterClient)
+        {
+            var nuid = GetComponent<NetUnitId>();
+            if (nuid != null) GameLoopManager.instance?.NotifyUnitDied(nuid.id);
+        }
 
         // --- �����������: ��������� ��� ���������� (� ����, � �����) ---
         Collider2D[] colliders = GetComponents<Collider2D>();

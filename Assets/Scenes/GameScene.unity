@@ -1253,6 +1253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f28e2be0f2a6b34a904d19693eefb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedPanel: {fileID: 150311587}
   speedUpButton: {fileID: 1754421517}
   speedDownButton: {fileID: 1061592946}
   speedText: {fileID: 1056508342}
@@ -144444,6 +144445,7 @@ GameObject:
   - component: {fileID: 1760679537}
   - component: {fileID: 1760679539}
   - component: {fileID: 1760679540}
+  - component: {fileID: 1760679541}
   m_Layer: 0
   m_Name: Game_Manager
   m_TagString: Untagged
@@ -144548,6 +144550,28 @@ MonoBehaviour:
   inputP1: {fileID: 1811793572}
   inputP2: {fileID: 1589008729}
   shopManager: {fileID: 1760679539}
+--- !u!114 &1760679541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760679536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 1
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1767652911
 GameObject:
   m_ObjectHideFlags: 0
