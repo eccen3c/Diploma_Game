@@ -23,7 +23,7 @@ MonoBehaviour:
   supplyCost: 1
   hp: 220
   damage: 24
-  moveSpeed: 2
+  moveSpeed: 1.7
   attackRange: 1.4
   visionRange: 7
   attackSpeed: 1.5

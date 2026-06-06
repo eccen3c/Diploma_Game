@@ -231,6 +231,7 @@ MonoBehaviour:
   laneY: 0
   separationRadius: 1.5
   separationForce: 3
+  unitData: {fileID: 0}
 --- !u!114 &8413541093044839712
 MonoBehaviour:
   m_ObjectHideFlags: 0

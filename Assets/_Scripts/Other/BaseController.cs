@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public class BaseController : MonoBehaviour
 {
@@ -45,6 +46,8 @@ public class BaseController : MonoBehaviour
 
     void Update()
     {
+        if (GameSession.mode == GameMode.OnlineMulti && !PhotonNetwork.IsMasterClient) return;
+
         if (Time.time >= nextFireTime)
         {
             GameObject target = FindClosestEnemy();
@@ -60,6 +63,7 @@ public class BaseController : MonoBehaviour
     {
         currentHealth = 1;
         UpdateUI();
+        GameLoopManager.instance?.SyncBaseHP(isPlayerBase, currentHealth);
     }
 
     public void TakeDamage(int damage)
@@ -67,8 +71,14 @@ public class BaseController : MonoBehaviour
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateUI();
-
+        GameLoopManager.instance?.SyncBaseHP(isPlayerBase, currentHealth);
         if (currentHealth <= 0) Die();
+    }
+
+    public void SetHP(int hp)
+    {
+        currentHealth = Mathf.Clamp(hp, 0, maxHealth);
+        UpdateUI();
     }
 
     void UpdateUI()
@@ -170,11 +180,26 @@ public class BaseController : MonoBehaviour
             offset = new Vector3(0, 0.5f, 0);
 
         projScript.SetTarget(target.transform, gameObject.tag, offset);
+
+        if (GameSession.mode == GameMode.OnlineMulti && PhotonNetwork.IsMasterClient)
+        {
+            NetUnitId nuid = target.GetComponent<NetUnitId>();
+            int netId = nuid != null ? nuid.id : -1;
+            GameLoopManager.instance?.SyncBaseShot(isPlayerBase, spawnPos, gameObject.tag, netId, target.transform.position + offset);
+        }
     }
 
     void Die()
     {
-        if (GameManager.instance) GameManager.instance.GameOver(gameObject.tag);
+        if (GameSession.mode == GameMode.OnlineMulti)
+        {
+            if (PhotonNetwork.IsMasterClient)
+                GameLoopManager.instance?.TriggerGameOver(gameObject.tag);
+        }
+        else
+        {
+            if (GameManager.instance) GameManager.instance.GameOver(gameObject.tag);
+        }
         Destroy(gameObject);
     }
 

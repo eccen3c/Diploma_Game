@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public class SpeedController : MonoBehaviour
 {
     public static SpeedController instance;
 
     [Header("UI")]
+    public GameObject speedPanel;
     public Button speedUpButton;
     public Button speedDownButton;
     public TextMeshProUGUI speedText;
@@ -21,9 +23,24 @@ public class SpeedController : MonoBehaviour
 
     void Start()
     {
+        bool isOnline = PhotonNetwork.InRoom;
         speedUpButton.onClick.AddListener(SpeedUp);
         speedDownButton.onClick.AddListener(SpeedDown);
-        UpdateUI();
+
+        if (isOnline)
+        {
+            if (speedPanel) speedPanel.SetActive(false);
+            else
+            {
+                speedUpButton.gameObject.SetActive(false);
+                speedDownButton.gameObject.SetActive(false);
+                if (speedText) speedText.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            UpdateUI();
+        }
     }
 
     public void SpeedUp()

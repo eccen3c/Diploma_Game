@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Photon.Pun;
 
 public class TestArcherAI : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class TestArcherAI : MonoBehaviour
     private bool isDead;
     private bool isPlayer;
     private string currentAnim;
+    private Vector3 clientPrevPos;
+    private float clientMoveTimer = 0f;
 
     [HideInInspector] public UnitData unitData;
 
@@ -61,11 +64,32 @@ public class TestArcherAI : MonoBehaviour
             transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
 
         lastAttackTime = -Random.Range(0f, attackCooldown);
+
+        if (GameSession.mode == GameMode.OnlineMulti && !PhotonNetwork.IsMasterClient)
+        {
+            if (rb) rb.simulated = false;
+            clientPrevPos = transform.position;
+        }
+    }
+
+    void UpdateClientAnim()
+    {
+        float moved = Vector3.Distance(transform.position, clientPrevPos);
+        clientPrevPos = transform.position;
+        if (moved > 0.005f) clientMoveTimer = 0.2f;
+        clientMoveTimer -= Time.deltaTime;
+        PlayAnim(clientMoveTimer > 0 ? "Walk" : "Idle");
     }
 
     void Update()
     {
         if (isDead) return;
+
+        if (GameSession.mode == GameMode.OnlineMulti && !PhotonNetwork.IsMasterClient)
+        {
+            UpdateClientAnim();
+            return;
+        }
 
         findTargetTimer -= Time.deltaTime;
         if (findTargetTimer <= 0f)
@@ -242,7 +266,31 @@ public class TestArcherAI : MonoBehaviour
 
         currentAnim = "";
         PlayAnim("Attack01");
+
+        if (GameSession.mode == GameMode.OnlineMulti && PhotonNetwork.IsMasterClient)
+        {
+            var nuid = GetComponent<NetUnitId>();
+            if (nuid != null) GameLoopManager.instance?.SyncUnitAttack(nuid.id);
+        }
+
         StartCoroutine(ShootArrowDelayed());
+    }
+
+    public void PlayClientAttack()
+    {
+        currentAnim = "";
+        PlayAnim("Attack01");
+    }
+
+    public void TriggerClientDeath()
+    {
+        if (isDead) return;
+        isDead = true;
+        PlayAnim("Death");
+        var col = GetComponent<Collider2D>();
+        if (col) col.enabled = false;
+        if (rb) rb.simulated = false;
+        Destroy(gameObject, 1f);
     }
 
     IEnumerator ShootArrowDelayed()
@@ -255,15 +303,25 @@ public class TestArcherAI : MonoBehaviour
 
         float spawnX = isPlayer ? arrowSpawnOffset.x : -arrowSpawnOffset.x;
         Vector2 spawnPos = (Vector2)transform.position + new Vector2(spawnX, arrowSpawnOffset.y);
-        GameObject arrowGO = Instantiate(arrowPrefab, spawnPos, Quaternion.identity);
+        Vector2 dir = ((Vector2)target.position + GetTargetBodyOffset()) - spawnPos;
 
+        GameObject arrowGO = Instantiate(arrowPrefab, spawnPos, Quaternion.identity);
         Arrow arrow = arrowGO.GetComponent<Arrow>();
         if (arrow != null)
         {
-            Vector2 dir = ((Vector2)target.position + GetTargetBodyOffset()) - spawnPos;
             arrow.damage = damage;
             arrow.targetTag = enemyTag;
             arrow.Init(dir, damage, enemyTag);
+        }
+
+        if (GameSession.mode == GameMode.OnlineMulti && PhotonNetwork.IsMasterClient)
+        {
+            var nuid = GetComponent<NetUnitId>();
+            if (nuid != null)
+            {
+                Vector2 targetPos = (Vector2)target.position + GetTargetBodyOffset();
+                GameLoopManager.instance?.SyncUnitProjectile(nuid.id, spawnPos, dir, damage, enemyTag, targetPos);
+            }
         }
     }
 
@@ -277,6 +335,11 @@ public class TestArcherAI : MonoBehaviour
     void Die()
     {
         isDead = true;
+        if (GameSession.mode == GameMode.OnlineMulti && PhotonNetwork.IsMasterClient)
+        {
+            var nuid = GetComponent<NetUnitId>();
+            if (nuid != null) GameLoopManager.instance?.NotifyUnitDied(nuid.id);
+        }
         PlayAnim("Death");
         GetComponent<Collider2D>().enabled = false;
         rb.simulated = false;

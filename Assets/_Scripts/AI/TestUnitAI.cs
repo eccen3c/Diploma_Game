@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Photon.Pun;
 
 public class TestUnitAI : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class TestUnitAI : MonoBehaviour
     private string currentAnim;
     private float avoidSide = 0f;
     private float avoidResetTimer = 0f;
+    private Vector3 clientPrevPos;
+    private float clientMoveTimer = 0f;
     private const float AVOID_HOLD_TIME = 1f;
 
     [HideInInspector] public UnitData unitData;
@@ -57,11 +60,32 @@ public class TestUnitAI : MonoBehaviour
 
         if (!isPlayer)
             transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+
+        if (GameSession.mode == GameMode.OnlineMulti && !PhotonNetwork.IsMasterClient)
+        {
+            if (rb) rb.simulated = false;
+            clientPrevPos = transform.position;
+        }
+    }
+
+    void UpdateClientAnim()
+    {
+        float moved = Vector3.Distance(transform.position, clientPrevPos);
+        clientPrevPos = transform.position;
+        if (moved > 0.005f) clientMoveTimer = 0.2f;
+        clientMoveTimer -= Time.deltaTime;
+        PlayAnim(clientMoveTimer > 0 ? "Walk" : "Idle");
     }
 
     void Update()
     {
         if (isDead) return;
+
+        if (GameSession.mode == GameMode.OnlineMulti && !PhotonNetwork.IsMasterClient)
+        {
+            UpdateClientAnim();
+            return;
+        }
 
         findTargetTimer -= Time.deltaTime;
         if (findTargetTimer <= 0f)
@@ -271,7 +295,31 @@ public class TestUnitAI : MonoBehaviour
 
         currentAnim = "";
         PlayAnim("Attack01");
+
+        if (GameSession.mode == GameMode.OnlineMulti && PhotonNetwork.IsMasterClient)
+        {
+            var nuid = GetComponent<NetUnitId>();
+            if (nuid != null) GameLoopManager.instance?.SyncUnitAttack(nuid.id);
+        }
+
         StartCoroutine(DealDamageDelayed());
+    }
+
+    public void PlayClientAttack()
+    {
+        currentAnim = "";
+        PlayAnim("Attack01");
+    }
+
+    public void TriggerClientDeath()
+    {
+        if (isDead) return;
+        isDead = true;
+        PlayAnim("Death");
+        var col = GetComponent<Collider2D>();
+        if (col) col.enabled = false;
+        if (rb) rb.simulated = false;
+        Destroy(gameObject, 1f);
     }
 
     IEnumerator DealDamageDelayed()
@@ -301,6 +349,11 @@ public class TestUnitAI : MonoBehaviour
     void Die()
     {
         isDead = true;
+        if (GameSession.mode == GameMode.OnlineMulti && PhotonNetwork.IsMasterClient)
+        {
+            var nuid = GetComponent<NetUnitId>();
+            if (nuid != null) GameLoopManager.instance?.NotifyUnitDied(nuid.id);
+        }
         PlayAnim("Death");
         GetComponent<Collider2D>().enabled = false;
         rb.simulated = false;

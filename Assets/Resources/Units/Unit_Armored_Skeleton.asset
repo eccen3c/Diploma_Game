@@ -22,7 +22,7 @@ MonoBehaviour:
   cost: 50
   incomeBonus: 5
   supplyCost: 1
-  hp: 1000
+  hp: 100
   damage: 18
   moveSpeed: 1.6
   attackRange: 2.4

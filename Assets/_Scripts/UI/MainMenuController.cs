@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class MainMenuController : MonoBehaviour
     public GameObject settingsModal;
     public GameObject mainMenuButtons;
     public GameObject darkOverlay;
+    public NetworkLobbyManager networkLobbyManager;
 
     public void OnSinglePlayClick()
     {
@@ -37,6 +39,13 @@ public class MainMenuController : MonoBehaviour
         if (settingsModal != null) settingsModal.SetActive(false);
         if (mainMenuButtons != null) mainMenuButtons.SetActive(true);
         if (darkOverlay != null) darkOverlay.SetActive(false);
+
+        if (networkLobbyManager != null)
+        {
+            if (Photon.Pun.PhotonNetwork.InRoom)
+                Photon.Pun.PhotonNetwork.LeaveRoom();
+            networkLobbyManager.ShowPanel(networkLobbyManager.panelChoice);
+        }
     }
 
     public void PlayGame()

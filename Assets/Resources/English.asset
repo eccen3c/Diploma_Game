@@ -84,3 +84,19 @@ MonoBehaviour:
       supply cost."
   - key: htp_button
     value: HOW TO PLAY
+  - key: back
+    value: Back
+  - key: join
+    value: Join
+  - key: create_room
+    value: Create room
+  - key: txt_code_room
+    value: 'Type code room:'
+  - key: code_room
+    value: 'Code room:'
+  - key: start_game
+    value: Start Game
+  - key: waiting
+    value: Waiting...
+  - key: room_not_found
+    value: Room not found!

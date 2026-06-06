@@ -9,6 +9,11 @@ public class Arrow : MonoBehaviour
 
     private Vector2 direction;
     private bool hasHit = false;
+    [HideInInspector] public bool isCosmetic = false;
+    private Vector2 cosmeticDest;
+    private bool hasCosmeticDest = false;
+
+    public void SetCosmeticDest(Vector2 pos) { cosmeticDest = pos; hasCosmeticDest = true; }
 
     public void Init(Vector2 dir, float dmg, string tag)
     {
@@ -23,6 +28,16 @@ public class Arrow : MonoBehaviour
     void Update()
     {
         if (hasHit) return;
+
+        if (isCosmetic && hasCosmeticDest)
+        {
+            if (Vector2.Distance(transform.position, cosmeticDest) < speed * Time.deltaTime * 1.5f)
+            {
+                hasHit = true;
+                Destroy(gameObject);
+                return;
+            }
+        }
 
         float step = speed * Time.deltaTime;
         Vector2 origin = transform.position;
@@ -42,23 +57,21 @@ public class Arrow : MonoBehaviour
         BaseController baseCtrl = other.GetComponent<BaseController>();
         if (baseCtrl != null && other.CompareTag(targetTag))
         {
-            baseCtrl.TakeDamage((int)damage);
-            Destroy(gameObject);
-            hasHit = true;
-            return true;
+            if (!isCosmetic) baseCtrl.TakeDamage((int)damage);
+            Destroy(gameObject); hasHit = true; return true;
         }
 
         if (!other.CompareTag(targetTag)) return false;
         if (!other.isTrigger) return false;
 
         TestArcherAI archer = other.GetComponent<TestArcherAI>();
-        if (archer != null) { archer.TakeDamage(damage); Destroy(gameObject); hasHit = true; return true; }
+        if (archer != null) { if (!isCosmetic) archer.TakeDamage(damage); Destroy(gameObject); hasHit = true; return true; }
 
         TestUnitAI unit = other.GetComponent<TestUnitAI>();
-        if (unit != null) { unit.TakeDamage(damage); Destroy(gameObject); hasHit = true; return true; }
+        if (unit != null) { if (!isCosmetic) unit.TakeDamage(damage); Destroy(gameObject); hasHit = true; return true; }
 
         UnitController ctrl = other.GetComponent<UnitController>();
-        if (ctrl != null) { ctrl.TakeDamage(damage); Destroy(gameObject); hasHit = true; return true; }
+        if (ctrl != null) { if (!isCosmetic) ctrl.TakeDamage(damage); Destroy(gameObject); hasHit = true; return true; }
 
         return false;
     }

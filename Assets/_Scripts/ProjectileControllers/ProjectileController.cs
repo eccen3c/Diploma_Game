@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Photon.Pun;
 
 public class ProjectileController : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class ProjectileController : MonoBehaviour
 
     private bool hasHit = false;
     private Animator anim;
+    [HideInInspector] public bool isCosmetic = false;
 
     void Start()
     {
@@ -30,6 +32,12 @@ public class ProjectileController : MonoBehaviour
         target = newTarget;
         ownerTag = tag;
         targetOffset = offset;
+    }
+
+    public void SetFallbackTarget(Vector3 pos)
+    {
+        target = null;
+        lastDirection = (pos - transform.position).normalized;
     }
 
     void Update()
@@ -46,6 +54,12 @@ public class ProjectileController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, angle);
 
             lastDirection = dir.normalized;
+
+            if (isCosmetic && Vector3.Distance(transform.position, aimPos) < 0.25f)
+            {
+                StartCoroutine(DestroyRoutine());
+                return;
+            }
         }
         else
         {
@@ -56,7 +70,6 @@ public class ProjectileController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (hasHit) return;
-
         if (collision.CompareTag(ownerTag)) return;
 
         UnitController unit = collision.GetComponent<UnitController>();
@@ -66,11 +79,13 @@ public class ProjectileController : MonoBehaviour
 
         if (unit != null || unitAI != null || archerAI != null || baseCtrl != null)
         {
-            if (unit) unit.TakeDamage(damage);
-            if (unitAI) unitAI.TakeDamage(damage);
-            if (archerAI) archerAI.TakeDamage(damage);
-            if (baseCtrl) baseCtrl.TakeDamage(damage);
-
+            if (!isCosmetic)
+            {
+                if (unit) unit.TakeDamage(damage);
+                if (unitAI) unitAI.TakeDamage(damage);
+                if (archerAI) archerAI.TakeDamage(damage);
+                if (baseCtrl) baseCtrl.TakeDamage(damage);
+            }
             StartCoroutine(DestroyRoutine());
         }
     }
